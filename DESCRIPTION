@@ -1,8 +1,12 @@
 Package: predkmeans
-Title: What the Package Does (one line, title case)
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Title: Covariate adaptive clustering
+Version: 0.0.1.0
+Author: Joshua Keller
+Maintainer: Joshua Keller <kellerjp@uw.edu>
+Description: Clusters multivariate exposures, using a mixture of experts model to allow covariates to influence cluster centers.  Designed for use in air pollution epidemiology settings, where cluster centers will need to be predicted.  Includes functions for predicting cluster membership using spatial splines and PCA scores using either multinomial logistic regression or SVMs. Package is functional for use within our group, but currently not ready or intended for CRAN distribution yet.
 Description: What the package does (one paragraph).
-Depends: R (>= 3.2.1)
-License: What license is it under?
+Imports: Rcpp (>= 0.11.5), maxLik
+Suggests: e1071, mgcv
+License: GPL (>= 2)
+LinkingTo: Rcpp, RcppArmadillo
 LazyData: true
