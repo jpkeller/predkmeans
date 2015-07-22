@@ -80,7 +80,12 @@
 #						......still need to do.
 #		17 July 2015 -- mixExp
 #		20 July 2015 -- changed function name to predkmeans
-predkmeans <- function(X, R, K=3, mu=NULL, muStart=c("kmeans","random"), sigma2=0,  sigma2fixed=FALSE,maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
+predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,  sigma2fixed=FALSE,maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
+	
+	if(is.null(K)){
+		stop("K not provided.  Please provide.")
+	}
+	
 	
 	# Check that arguments are correct
 	muStart <- match.arg(muStart)
@@ -90,11 +95,13 @@ predkmeans <- function(X, R, K=3, mu=NULL, muStart=c("kmeans","random"), sigma2=
 	n <- nrow(X)
 	if (n!=nrow(R)){
 		stop("Number of outcome observations does not match number of covariate observations.")
+	} 
+	if (n<K){
+		stop("Cannot select more clusters than observations")
 	}
-		
+
 	# If sigma2 is 0 and fixed, then return kmeans result
 	if (sigma2==0 && sigma2fixed){
-		
 			res.best <- kmeans(x=X, centers=K, nstart=nStarts)
 	centers <- res.best$centers
 	tr.assign <- res.best$cluster
