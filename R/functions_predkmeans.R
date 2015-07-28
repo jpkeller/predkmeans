@@ -67,7 +67,15 @@
 ##
 ##' @author Joshua Keller
 ##' @export
-##'	@return To be added......
+##'	@return  An object of class \code{predkmeans}, containing the following elements:
+##' \item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. (TO BE COMPLETED)}
+##' \item{center}{Matrix of cluster centers}
+##' \item{cluster}{Vector of cluster labels assigned to observations}
+##' \item{K}{Number of clusters}
+##'	\item{sigam2}{Final value of sigma^2.}
+##' \item{wSS}{Mean within-cluster sum-of-squares}
+##' \item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
+##list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])
 #		Author: J. Keller
 #		Original Date: February 2014
 #		Last modified: June 2015
@@ -110,7 +118,6 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 		class(out) <- "predkmeans"
 	return(out)
 	}
-	
 	
 	d <- ncol(X) # Dimension of outcome
 	if (is.null(colnames(X))) colnames(X) <- paste0("X", 1:d)
@@ -212,7 +219,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 			obj <- obj + log(sum(sigma2^(-d/2)*exp(-1/(2*sigma2)*rowSums(q*q)) * Uproxy[kk,]))
 		}				
 				
-		results[[i]] <- list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])			
+		results[[i]] <- list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, h=h, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])			
 			
 		if (verbose>1) {
 			cat("EM Algorithm completed\n")
@@ -232,7 +239,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 	centers <- res.best $mu
 	tr.assign <- assignCluster(X, centers= centers)
 	wSS <- sum((X -  centers[tr.assign,])^2)
-	out <- list(res.best= res.best, centers=centers, cluster=tr.assign, K=K, sigma2= res.best$sigma2, wSS=wSS, sigma2fixed= sigma2fixed, h=h, gamma=gamma)
+	out <- list(res.best= res.best, centers=centers, cluster=tr.assign, K=K, sigma2= res.best$sigma2, wSS=wSS, sigma2fixed= sigma2fixed)
 
 	if (returnAll){
 		out <- c(out, res.all=list(results), best.fit=best.fit)

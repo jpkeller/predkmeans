@@ -58,11 +58,16 @@ are re-selected up to muRestart times.}
 included in the output.}
 
 \item{...}{Additional arguments passed to \code{\link{mlogit}}}
-
-\item{mynew}{parameter}
 }
 \value{
-To be added......
+An object of class \code{predkmeans}, containing the following elements:
+\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. (TO BE COMPLETED)}
+\item{center}{Matrix of cluster centers}
+\item{cluster}{Vector of cluster labels assigned to observations}
+\item{K}{Number of clusters}
+	\item{sigam2}{Final value of sigma^2.}
+\item{wSS}{Mean within-cluster sum-of-squares}
+\item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
 }
 \description{
 Uses a Mixture-of-experts algorithm to find
