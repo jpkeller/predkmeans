@@ -54,10 +54,11 @@
 ##' @seealso \code{\link{predkmeans}}
 ##' @author Joshua Keller
 ##' @export
-##' @useDynLib predkmeans
 ##' @family mlogit methods
-#
-#  Output:
+##' @useDynLib predkmeans
+##' @importFrom Rcpp sourceCpp
+##
+##  Output:
 ##' @return A list containing the following:
 ##'
 ##' \item{beta}{ a p x (K-1) matrix of parameter estimates corresponding to the 2:K columns of Y and covariates in X}

@@ -38,7 +38,7 @@
 ##' @param maxitEM Maximum number of EM iterations for
 ##' 	finding the Mixture of Experts solution
 ##' @param tol convergence criterion
-##' @param maxitMlogit Maximum number of iterations in the
+##' @param maxitMlogit Maximum number of iterations in the=
 ##'   	mlogit optimization (nested within EM algorithm)
 ##' @param muRestart  Gives max number of attempts at picking
 ##'    	starting values. Only used when muStart='random'.
@@ -66,7 +66,7 @@
 ##'		 181-214.
 ##
 ##' @author Joshua Keller
-##
+##' @export
 ##'	@return To be added......
 #		Author: J. Keller
 #		Original Date: February 2014

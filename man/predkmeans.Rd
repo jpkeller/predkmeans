@@ -4,7 +4,7 @@
 \alias{predkmeans}
 \title{Predictive K-means Clustering}
 \usage{
-predkmeans(X, R, K = 3, mu = NULL, muStart = c("kmeans", "random"),
+predkmeans(X, R, K, mu = NULL, muStart = c("kmeans", "random"),
   sigma2 = 0, sigma2fixed = FALSE, maxitEM = 100, tol = 1e-05,
   convEM = c("both", "mu", "gamma"), nStarts = 1, maxitMlogit = 500,
   verbose = 0, muRestart = 1000, returnAll = FALSE, ...)
@@ -43,7 +43,7 @@ stops when the Frobenius norm of the change in mu,
 
 \item{nStarts}{number of times to perform EM algorithm}
 
-\item{maxitMlogit}{Maximum number of iterations in the
+\item{maxitMlogit}{Maximum number of iterations in the=
 mlogit optimization (nested within EM algorithm)}
 
 \item{verbose}{numeric vector indicating how much output to produce}
@@ -58,6 +58,8 @@ are re-selected up to muRestart times.}
 included in the output.}
 
 \item{...}{Additional arguments passed to \code{\link{mlogit}}}
+
+\item{mynew}{parameter}
 }
 \value{
 To be added......
