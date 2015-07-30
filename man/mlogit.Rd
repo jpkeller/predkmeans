@@ -66,7 +66,7 @@ Solves a multinomial logistic problem using
 		Newton-Raphson method
 }
 \details{
-The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.
+The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.  The log-likehood function, along with its gradient and hessian, are implemented as C++ functions (via the \code{RcppArmadillo} package).
 }
 \author{
 Joshua Keller

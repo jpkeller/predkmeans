@@ -41,12 +41,13 @@
 #' @return A list containing some or all of the following elements:
 #'	\item{tr.assign}{Cluster assignments at training locations}
 #' 	\item{mlfit}{A subset of the mlogit object returned by the function of that name}
-#' \item{beta}{beta}
-#' \item{test.pred}{test.pred}
-#' \item{test.assign}{test.assign}
-#' \item{pred.acc}{pred.acc}
-##' \item{MSEP}{MSEP}
-##' \item{wSS.subj}{wSS.subj}
+#' \item{beta}{Estimated model parameters}
+#' \item{test.pred}{Predicted cluster assignments at test locations}
+#' \item{test.assign}{'Best' cluster assignments at test locations (i.e. assignment to closest cluster center)}
+#' \item{pred.acc}{Prediction accuracy}
+##' \item{MSEP}{Mean squared error of prediction.  Sum of squared distances between assigned cluster center and best (i.e. closest) cluster center. Null if \code{X} not provided.}
+##' \item{wSS.subj}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations}
+##' \item{GPE}{Global Prediction Error (term needs re-naming).  }
 ##' @export
 predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, X=NULL, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE)){
 
@@ -86,15 +87,17 @@ if (!is.null(X) && nrow(X)>0){
 	pred.acc <- mean(test.pred == test.assign)
 	MSEP <- sum((centers[test.pred,] -  centers[test.assign,])^2)/nrow(X)
 	wSS.subj <- sum((X - centers[test.assign,])^2)/nrow(X)
+	GPE <- sum((X - centers[test.pred,])^2)/nrow(X)
 } else {
 	test.assign <- NULL
 	pred.acc <- NULL
 	pred.SS <- NULL
 	MSEP <- NULL
 	wSS.subj <- NULL
+	GPE <- NULL
 }
 
-out <- list(tr.assign= tr.assign, mlfit=mlfit[c("beta", "fitted", "res.best", "status")], beta=beta, test.pred = test.pred , test.assign=test.assign, pred.acc=pred.acc, MSEP=MSEP, wSS.subj=wSS.subj)
+out <- list(tr.assign= tr.assign, mlfit=mlfit[c("beta", "fitted", "res.best", "status")], beta=beta, test.pred = test.pred , test.assign=test.assign, pred.acc=pred.acc, MSEP=MSEP, wSS.subj=wSS.subj, GPE=GPE)
 
 return(out)
 }
@@ -166,12 +169,14 @@ if (!is.null(X) && nrow(X)>0){
 	pred.acc <- mean(test.pred == test.assign)
 	MSEP <- sum((centers[test.pred,] -  centers[test.assign,])^2)/nrow(X)
 	wSS.subj <- sum((X - centers[test.assign,])^2)/nrow(X)
+	GPE <- sum((X - centers[test.pred,])^2)/nrow(X)
 } else {
 	test.assign <- NULL
 	pred.acc <- NULL
 	pred.SS <- NULL
 	MSEP <- NULL
 	wSS.subj <- NULL
+	GPE <- NULL
 }
 
 out <- list(tr.assign= tr.assign, svm.model=svm.model, test.pred = test.pred , test.assign=test.assign, pred.acc=pred.acc, MSEP=MSEP, wSS.subj=wSS.subj)

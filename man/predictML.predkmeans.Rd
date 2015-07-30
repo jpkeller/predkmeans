@@ -50,12 +50,13 @@ predictSVM.predkmeans(object = NULL, centers = object$centers, R, Rstar,
 A list containing some or all of the following elements:
 	\item{tr.assign}{Cluster assignments at training locations}
 	\item{mlfit}{A subset of the mlogit object returned by the function of that name}
-\item{beta}{beta}
-\item{test.pred}{test.pred}
-\item{test.assign}{test.assign}
-\item{pred.acc}{pred.acc}
-\item{MSEP}{MSEP}
-\item{wSS.subj}{wSS.subj}
+\item{beta}{Estimated model parameters}
+\item{test.pred}{Predicted cluster assignments at test locations}
+\item{test.assign}{'Best' cluster assignments at test locations (i.e. assignment to closest cluster center)}
+\item{pred.acc}{Prediction accuracy}
+\item{MSEP}{Mean squared error of prediction.  Sum of squared distances between assigned cluster center and best (i.e. closest) cluster center. Null if \code{X} not provided.}
+\item{wSS.subj}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations}
+\item{GPE}{Global Prediction Error (term needs re-naming).  }
 }
 \description{
 Predicts cluster membership using either multinomial logistic

@@ -85,4 +85,7 @@ Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 		experts and the EM algorithm. \emph{Neural computation 6}(2),
 		 181-214.
 }
+\seealso{
+predictML.predkmeans
+}
 

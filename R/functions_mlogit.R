@@ -5,8 +5,15 @@
 ## This file contains:
 ##
 ##	mlogit()
-
-
+##  print.mlogit()
+##  summary.mlogit()
+##  print.summary.mlogit()
+##  logLikeMultinomial()
+##  gradientMultinomial()
+##  hessianMultinomial()
+##  logLikeMultinomial_Rcpp()
+##  gradientMultinomial_Rcpp()
+##  hessianMultinomial_Rcpp()
 
 ##' @name mlogit
 ##' @title Multinomial Logistic Regression
@@ -14,8 +21,7 @@
 ##' @description Solves a multinomial logistic problem using 
 ##'		Newton-Raphson method
 ##
-##' @details The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.
-#	Original function name was 'my_mlogit'
+##' @details The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.  The log-likehood function, along with its gradient and hessian, are implemented as C++ functions (via the \code{RcppArmadillo} package).
 #
 #  Input:
 ##'  @param  Y  A matrix of the outcomes, with K columns for 

@@ -33,7 +33,8 @@ assignCluster <- function(X, centers){
 
 
 
-
+# @title Get PCA comps for regression
+# @export
 get_PCA_matrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
 	pca <- prcomp(data[,covarnames, drop=FALSE], center=center, scale=scale)
 	X <- pca$x[,1:ncomps, drop=FALSE]
