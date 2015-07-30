@@ -45,9 +45,9 @@
 #' \item{test.pred}{Predicted cluster assignments at test locations}
 #' \item{test.assign}{'Best' cluster assignments at test locations (i.e. assignment to closest cluster center)}
 #' \item{pred.acc}{Prediction accuracy}
-##' \item{MSEP}{Mean squared error of prediction.  Sum of squared distances between assigned cluster center and best (i.e. closest) cluster center. Null if \code{X} not provided.}
-##' \item{wSS.subj}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations}
-##' \item{GPE}{Global Prediction Error (term needs re-naming).  }
+##' \item{MSEP}{Mean squared error of prediction.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center. Null if \code{X} not provided.}
+##' \item{wSS.subj}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center. Null if \code{X} not provided.}
+##' \item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center. Null if \code{X} not provided.}
 ##' @export
 predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, X=NULL, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE)){
 
