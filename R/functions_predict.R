@@ -11,6 +11,11 @@
 ##
 
 
+predictML <- function(x) UseMethod("predictML")
+predictSVM <- function(x) UseMethod("predictSVM")
+
+
+
 ##' @name predictML.predkmeans
 ##' @aliases predictML.predkmeans predictML 
 ##' @title Prediction of Cluster Membership

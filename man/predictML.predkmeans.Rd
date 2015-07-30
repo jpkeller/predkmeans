@@ -7,15 +7,16 @@
 \alias{predictSVM.predkmeans}
 \title{Prediction of Cluster Membership}
 \usage{
-predictML.predkmeans(object = NULL, centers = object$centers,
+\method{predictML}{predkmeans}(object = NULL, centers = object$centers,
   K = nrow(centers), R, Rstar, X = NULL, Xstar = NULL,
   tr.assign = object$cluster, muStart = "random", maxitMlogit = 500,
   verbose = 1, nMlogitStarts = 1,
   mlogit.control = list(suppressFittedWarning = TRUE))
 
-predictSVM.predkmeans(object = NULL, centers = object$centers, R, Rstar,
-  K = nrow(centers), X = NULL, Xstar = NULL, tr.assign = object$cluster,
-  svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)))
+\method{predictSVM}{predkmeans}(object = NULL, centers = object$centers, R,
+  Rstar, K = nrow(centers), X = NULL, Xstar = NULL,
+  tr.assign = object$cluster, svm.control = list(gamma = c(1/(2:1), 2), cost
+  = seq(20, 100, by = 20)))
 }
 \arguments{
 \item{object}{A predkmeans object, from which the cluster centers will be extracted.}
