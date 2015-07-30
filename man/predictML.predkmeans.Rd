@@ -8,13 +8,12 @@
 \title{Prediction of Cluster Membership}
 \usage{
 predictML.predkmeans(object = NULL, centers = object$centers,
-  K = nrow(centers), R, Rstar, X = NULL, Xstar = NULL,
-  tr.assign = object$cluster, muStart = "random", maxitMlogit = 500,
-  verbose = 1, nMlogitStarts = 1,
+  K = nrow(centers), R, Rstar, Xstar = NULL, tr.assign = object$cluster,
+  muStart = "random", maxitMlogit = 500, verbose = 1, nMlogitStarts = 1,
   mlogit.control = list(suppressFittedWarning = TRUE))
 
 predictSVM.predkmeans(object = NULL, centers = object$centers, R, Rstar,
-  K = nrow(centers), X = NULL, Xstar = NULL, tr.assign = object$cluster,
+  K = nrow(centers), Xstar = NULL, tr.assign = object$cluster,
   svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)))
 }
 \arguments{
@@ -28,11 +27,9 @@ predictSVM.predkmeans(object = NULL, centers = object$centers, R, Rstar,
 
 \item{Rstar}{matrix of covariates at training locations}
 
-\item{X}{Optional matrix of observations at prediction locations. If provided, measures of prediction performance will be reported.}
-
 \item{Xstar}{matrix of observation at training locations.  Either this or \code{tr.assign} is required.}
 
-\item{tr.assign}{vector of cluster assignments at training locations}
+\item{tr.assign}{vector of cluster assignments at training locations.  By default, extracted from \code{object}.}
 
 \item{muStart}{starting value for cluster centers in mlogit optimization (IDEA: change to pull from predkmeans object?).  If not provided, starting values are selected randomly.}
 
@@ -52,11 +49,6 @@ A list containing some or all of the following elements:
 	\item{mlfit}{A subset of the mlogit object returned by the function of that name}
 \item{beta}{Estimated model parameters}
 \item{test.pred}{Predicted cluster assignments at test locations}
-\item{test.assign}{'Best' cluster assignments at test locations (i.e. assignment to closest cluster center)}
-\item{pred.acc}{Prediction accuracy}
-\item{MSEP}{Mean squared error of prediction.  Sum of squared distances between assigned cluster center and best (i.e. closest) cluster center. Null if \code{X} not provided.}
-\item{wSS.subj}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations}
-\item{GPE}{Global Prediction Error (term needs re-naming).  }
 }
 \description{
 Predicts cluster membership using either multinomial logistic
@@ -64,6 +56,10 @@ Predicts cluster membership using either multinomial logistic
 }
 \details{
 Function for predicting cluster membership in clusters identified by k-means or predictive k-means using multinomial logistic regression or support vector machines (SVMs).  For multinomial logitic regression, parameter estimation is handled by \code{mlogit}.  For SVMs, the svm is fit using \code{best.svm} in \code{e1071} package.
+
+Because this prediction includes return information about cluster assignment
+and prediction model parameters, this method is deliberately distinct from
+the generic \code{predict} functions.
 }
 \author{
 Joshua Keller

@@ -6,7 +6,7 @@
 ##
 ##	predictML.predkmeans()
 ##	predictSVM.predkmeans()
-##
+##  predictionMetrics()
 ##
 ##
 
@@ -19,6 +19,10 @@
 #'    regression or SVMs.
 # 
 #' @details Function for predicting cluster membership in clusters identified by k-means or predictive k-means using multinomial logistic regression or support vector machines (SVMs).  For multinomial logitic regression, parameter estimation is handled by \code{mlogit}.  For SVMs, the svm is fit using \code{best.svm} in \code{e1071} package.
+##'
+##' Because this prediction includes return information about cluster assignment
+##' and prediction model parameters, this method is deliberately distinct from
+##' the generic \code{predict} functions.
 #
 # INPUT:
 #' @param   object A predkmeans object, from which the cluster centers will be extracted.
@@ -26,9 +30,8 @@
 ##' @param 	K Number of clusters
 ##' @param	R 	matrix of covariates for observations to be predicted at.  
 ##' @param	Rstar matrix of covariates at training locations
-#' @param	X 	Optional matrix of observations at prediction locations. If provided, measures of prediction performance will be reported.
 #' @param Xstar matrix of observation at training locations.  Either this or \code{tr.assign} is required.	
-#' @param  tr.assign   vector of cluster assignments at training locations
+#' @param  tr.assign   vector of cluster assignments at training locations.  By default, extracted from \code{object}.
 #' @param muStart starting value for cluster centers in mlogit optimization (IDEA: change to pull from predkmeans object?).  If not provided, starting values are selected randomly. 
 ##' @param maxitMlogit Maximum number of iterations for \code{mlogit} in prediction
 ##' @param verbose integer indicating amount of output to be displayed
@@ -43,13 +46,8 @@
 #' 	\item{mlfit}{A subset of the mlogit object returned by the function of that name}
 #' \item{beta}{Estimated model parameters}
 #' \item{test.pred}{Predicted cluster assignments at test locations}
-#' \item{test.assign}{'Best' cluster assignments at test locations (i.e. assignment to closest cluster center)}
-#' \item{pred.acc}{Prediction accuracy}
-##' \item{MSEP}{Mean squared error of prediction.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center. Null if \code{X} not provided.}
-##' \item{wSS.subj}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center. Null if \code{X} not provided.}
-##' \item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center. Null if \code{X} not provided.}
 ##' @export
-predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, X=NULL, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE)){
+predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE)){
 
 if (!is.null(object)){
 	if(!inherits(object, c("predkmeans"))){
@@ -82,23 +80,8 @@ mlfit <- do.call(mlogit, args=c(list(Y= mm.tr.assign, X=Rstar, beta=beta.init, i
 beta <- mlfit$beta
 test.pred <- get.cluster.pred(R= R, beta=beta)
 
-if (!is.null(X) && nrow(X)>0){
-	test.assign <- assignCluster(X, centers= centers)
-	pred.acc <- mean(test.pred == test.assign)
-	MSEP <- sum((centers[test.pred,] -  centers[test.assign,])^2)/nrow(X)
-	wSS.subj <- sum((X - centers[test.assign,])^2)/nrow(X)
-	GPE <- sum((X - centers[test.pred,])^2)/nrow(X)
-} else {
-	test.assign <- NULL
-	pred.acc <- NULL
-	pred.SS <- NULL
-	MSEP <- NULL
-	wSS.subj <- NULL
-	GPE <- NULL
-}
 
-out <- list(tr.assign= tr.assign, mlfit=mlfit[c("beta", "fitted", "res.best", "status")], beta=beta, test.pred = test.pred , test.assign=test.assign, pred.acc=pred.acc, MSEP=MSEP, wSS.subj=wSS.subj, GPE=GPE)
-
+out <- list(tr.assign= tr.assign, mlfit=mlfit[c("beta", "fitted", "res.best", "status")], beta=beta, test.pred = test.pred)
 return(out)
 }
 
@@ -123,7 +106,7 @@ return(out)
 #   tr.assign -- Assignments of training data
 #   
 predictSVM.predkmeans <- function(object=NULL,
-centers=object$centers, R,  Rstar, K=nrow(centers), X=NULL, Xstar=NULL, tr.assign =object$cluster,  svm.control=list(gamma=c(1/(2:1), 2), cost=seq(20, 100, by=20))){
+centers=object$centers, R,  Rstar, K=nrow(centers), Xstar=NULL, tr.assign =object$cluster,  svm.control=list(gamma=c(1/(2:1), 2), cost=seq(20, 100, by=20))){
 
 if(!requireNamespace("e1071", quietly=TRUE)){
 	stop("e1071 is required for SVM prediction.  Please install it.", call.=FALSE)
@@ -164,22 +147,43 @@ if (!all(colnames(R) %in% colnames(Rstar))) {
 	svm.model$call <- NULL 
 	test.pred <- predict(svm.model, newdata= R)
 
-if (!is.null(X) && nrow(X)>0){
-	test.assign <- assignCluster(X, centers= centers)
-	pred.acc <- mean(test.pred == test.assign)
-	MSEP <- sum((centers[test.pred,] -  centers[test.assign,])^2)/nrow(X)
-	wSS.subj <- sum((X - centers[test.assign,])^2)/nrow(X)
-	GPE <- sum((X - centers[test.pred,])^2)/nrow(X)
-} else {
-	test.assign <- NULL
-	pred.acc <- NULL
-	pred.SS <- NULL
-	MSEP <- NULL
-	wSS.subj <- NULL
-	GPE <- NULL
-}
 
-out <- list(tr.assign= tr.assign, svm.model=svm.model, test.pred = test.pred , test.assign=test.assign, pred.acc=pred.acc, MSEP=MSEP, wSS.subj=wSS.subj)
-
+out <- list(tr.assign= tr.assign, svm.model=svm.model, test.pred = test.pred)
 return(out)
 }
+
+
+##' @name predictionMetrics
+##' @title Measures of Prediction Performance
+##
+##' @param centers Matrix of Cluster centers
+##' @param cluster.pred vector of predicted cluster membership.  Assumed to be integers
+##'					corresponding to rows of \code{centers}.
+##'	@param X Matrix of observations at prediction locations.
+##
+##' @export
+##' @seealso predictML
+##' @return A list with the following elements:
+##' \item{cluster.pred}{Predicted cluster assignments}
+##' \item{cluster.assign}{'Best' cluster assignments (i.e. assignment to closest cluster center)}
+##' \item{pred.acc}{Proportion of cluster labels correctly predicted.}
+##' \item{MSEP}{Mean squared error of prediction.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
+##' \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
+##' \item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center.}
+predictionMetrics <- function(centers, cluster.pred, X){		
+	# TO DO: Add check of 'cluster.pred' to make robust
+
+	cluster.assign <- assignCluster(X, centers= centers)
+	pred.acc <- mean(cluster.pred == cluster.assign)
+	MSEP <- sum((centers[cluster.pred,] -  centers[cluster.assign,])^2)/nrow(X)
+	wSS <- sum((X - centers[cluster.assign,])^2)/nrow(X)
+	GPE <- sum((X - centers[cluster.pred,])^2)/nrow(X)
+	
+	res <- list(cluster.pred= cluster.pred, cluster.assign= cluster.assign, pred.acc= pred.acc,  MSEP=MSEP, wSS=wSS, GPE=GPE)	
+	res
+}
+
+
+
+
+
