@@ -37,7 +37,7 @@
 ##' @param verbose integer indicating amount of output to be displayed
 ##' @param nMlogitStarts number of mlogit starts to use in estimation of parameters
 ##' @param mlogit.control list of control parameters to be passes to \code{mlogit}
-#' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}
+#' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
 #' @author Joshua Keller
 #
 # Output
@@ -155,14 +155,14 @@ return(out)
 
 ##' @name predictionMetrics
 ##' @title Measures of Prediction Performance
-##
+##' @description Computes several measures of performance for cluster label prediction.
 ##' @param centers Matrix of Cluster centers
 ##' @param cluster.pred vector of predicted cluster membership.  Assumed to be integers
 ##'					corresponding to rows of \code{centers}.
 ##'	@param X Matrix of observations at prediction locations.
 ##
 ##' @export
-##' @seealso predictML
+##' @seealso \code{\link{predictML}}
 ##' @return A list with the following elements:
 ##' \item{cluster.pred}{Predicted cluster assignments}
 ##' \item{cluster.assign}{'Best' cluster assignments (i.e. assignment to closest cluster center)}
@@ -171,7 +171,13 @@ return(out)
 ##' \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
 ##' \item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center.}
 predictionMetrics <- function(centers, cluster.pred, X){		
-	# TO DO: Add check of 'cluster.pred' to make robust
+	if (class(X)!="matrix") X <- as.matrix(X)
+	if (class(centers)!="matrix") centers <- as.matrix(centers)
+	if(ncol(centers)!=ncol(X)) stop("Number of columns in 'centers' and 'X' should be the same.")
+	if(length(cluster.pred)!=nrow(X)) stop("Length of cluster.pred should equal number of rows in X.")
+	K <- nrow(centers)
+	if (any(!unique(cluster.pred) %in% 1:K)) stop("cluster.pred must be integers within 1 to K=nrow(centers)")
+	
 
 	cluster.assign <- assignCluster(X, centers= centers)
 	pred.acc <- mean(cluster.pred == cluster.assign)

@@ -65,6 +65,6 @@ the generic \code{predict} functions.
 Joshua Keller
 }
 \seealso{
-\code{\link{mlogit}}, \code{\link{predkmeans}}
+\code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
 }
 

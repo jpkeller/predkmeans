@@ -24,9 +24,9 @@ A list with the following elements:
 \item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center.}
 }
 \description{
-Measures of Prediction Performance
+Computes several measures of performance for cluster label prediction.
 }
 \seealso{
-predictML
+\code{\link{predictML}}
 }
 
