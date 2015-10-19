@@ -13,7 +13,8 @@ mlogit(Y, X, beta = NULL, add.intercept = FALSE, betaOnly = FALSE,
 the K groups.  Row sums of the matrix should be equal
 to one, but entries do not have to be 0/1 (but they
 should be positive). i.e. this is a matrix of hard or
-soft assignments to K categories.}
+soft assignments to K categories. The first column is
+used as the reference category.}
 
 \item{X}{matrix of covariates for regression. Should have
 the same number of rows (observations) as Y. Coefficients
@@ -54,7 +55,7 @@ Defaults to 0.}
 \value{
 A list containing the following:
 
-\item{beta}{ a p x (K-1) matrix of parameter estimates corresponding to the 2:K columns of Y and covariates in X}
+\item{beta}{ a p x K matrix of parameter estimates corresponding to the K columns of Y and p covariates in X}
  \item{fitted01}{indicator of whether fitted values of 1 were present.}
  \item{fitted}{the fitted probabilities}
  \item{res.best}{ the best result from the maxNR fit}

@@ -86,6 +86,6 @@ Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 		 181-214.
 }
 \seealso{
-predictML.predkmeans
+\code{\link{predictML.predkmeans}}
 }
 

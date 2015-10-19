@@ -18,10 +18,10 @@ predictionMetrics(centers, cluster.pred, X)
 A list with the following elements:
 \item{cluster.pred}{Predicted cluster assignments}
 \item{cluster.assign}{'Best' cluster assignments (i.e. assignment to closest cluster center)}
-\item{pred.acc}{Proportion of cluster labels correctly predicted.}
-\item{MSEP}{Mean squared error of prediction.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
+\item{MSPE}{Mean squared prediction error. Sum of squared distances between observations and predicted cluster centers.}
 \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
-\item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center.}
+\item{pred.acc}{Proportion of cluster labels correctly predicted.}
+\item{MSME}{Mean squared misclassification error.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
 }
 \description{
 Computes several measures of performance for cluster label prediction.

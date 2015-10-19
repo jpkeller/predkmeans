@@ -61,7 +61,7 @@
 ##'		based upon the approach presented by Jordan and Jacobs (1994).  If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then kmeans clustering is done instead.
 ##
 ##' @family 'predkmeans methods'
-##' @seealso predictML.predkmeans
+##' @seealso \code{\link{predictML.predkmeans}}
 ##' @references Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 ##'		experts and the EM algorithm. \emph{Neural computation 6}(2),
 ##'		 181-214.

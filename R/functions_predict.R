@@ -171,10 +171,10 @@ return(out)
 ##' @return A list with the following elements:
 ##' \item{cluster.pred}{Predicted cluster assignments}
 ##' \item{cluster.assign}{'Best' cluster assignments (i.e. assignment to closest cluster center)}
-##' \item{pred.acc}{Proportion of cluster labels correctly predicted.}
-##' \item{MSEP}{Mean squared error of prediction.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
+##' \item{MSPE}{Mean squared prediction error. Sum of squared distances between observations and predicted cluster centers.}
 ##' \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
-##' \item{GPE}{Global Prediction Error (term needs re-naming). Sum of squared distances between observation at prediciton locations and predicted cluster center.}
+##' \item{pred.acc}{Proportion of cluster labels correctly predicted.}
+##' \item{MSME}{Mean squared misclassification error.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
 predictionMetrics <- function(centers, cluster.pred, X){		
 	if (class(X)!="matrix") X <- as.matrix(X)
 	if (class(centers)!="matrix") centers <- as.matrix(centers)
@@ -186,11 +186,11 @@ predictionMetrics <- function(centers, cluster.pred, X){
 
 	cluster.assign <- assignCluster(X, centers= centers)
 	pred.acc <- mean(cluster.pred == cluster.assign)
-	MSEP <- sum((centers[cluster.pred,] -  centers[cluster.assign,])^2)/nrow(X)
+	MSME <- sum((centers[cluster.pred,] -  centers[cluster.assign,])^2)/nrow(X)
 	wSS <- sum((X - centers[cluster.assign,])^2)/nrow(X)
-	GPE <- sum((X - centers[cluster.pred,])^2)/nrow(X)
+	MSPE <- sum((X - centers[cluster.pred,])^2)/nrow(X)
 	
-	res <- list(cluster.pred= cluster.pred, cluster.assign= cluster.assign, pred.acc= pred.acc,  MSEP=MSEP, wSS=wSS, GPE=GPE)	
+	res <- list(cluster.pred= cluster.pred, cluster.assign= cluster.assign, MSPE=MSPE, wSS=wSS, pred.acc= pred.acc,  MSME=MSME)	
 	res
 }
 
