@@ -3,6 +3,8 @@
 \name{predictML.predkmeans}
 \alias{predictML}
 \alias{predictML.predkmeans}
+\alias{predictMixExp}
+\alias{predictMixExp.predkmeans}
 \alias{predictSVM}
 \alias{predictSVM.predkmeans}
 \title{Prediction of Cluster Membership}
@@ -15,6 +17,8 @@
 \method{predictSVM}{predkmeans}(object = NULL, centers = object$centers, R,
   Rstar, K = nrow(centers), Xstar = NULL, tr.assign = object$cluster,
   svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)))
+
+\method{predictMixExp}{predkmeans}(object, R, ...)
 }
 \arguments{
 \item{object}{A predkmeans object, from which the cluster centers will be extracted.}
@@ -60,6 +64,10 @@ Function for predicting cluster membership in clusters identified by k-means or 
 Because this prediction includes return information about cluster assignment
 and prediction model parameters, this method is deliberately distinct from
 the generic \code{predict} functions.
+
+The \code{predictMixExp} funciton provides predictions from
+the 'working' cluster assignments created as part of the
+mixture of experts algorithm from \code{predkmeans}.
 }
 \author{
 Joshua Keller
