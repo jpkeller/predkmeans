@@ -13,6 +13,7 @@
 
 predictML <- function(x) UseMethod("predictML")
 predictSVM <- function(x) UseMethod("predictSVM")
+predictMixExp <- function(x) UseMethod("predictSVM")
 
 
 
@@ -28,6 +29,10 @@ predictSVM <- function(x) UseMethod("predictSVM")
 ##' Because this prediction includes return information about cluster assignment
 ##' and prediction model parameters, this method is deliberately distinct from
 ##' the generic \code{predict} functions.
+##'
+##' The \code{predictMixExp} funciton provides predictions from 
+##' the 'working' cluster assignments created as part of the 
+##' mixture of experts algorithm from \code{predkmeans}.
 #
 # INPUT:
 #' @param   object A predkmeans object, from which the cluster centers will be extracted.
@@ -156,6 +161,48 @@ if (!all(colnames(R) %in% colnames(Rstar))) {
 out <- list(tr.assign= tr.assign, svm.model=svm.model, test.pred = test.pred)
 return(out)
 }
+
+
+
+##' @rdname predictML.predkmeans
+##' @aliases predictMixExp.predkmeans predictMixExp
+##
+##
+##' @export
+# Function for using fitted values from predictive k-means
+# fits to make predictions
+#
+# Need to add error checking for R
+# INPUT:
+#	centers -- Matrix of cluster centers, assumed to be K-by-p
+#	R -- matrix of covariates for observations to be predicted at.  
+#	X -- matrix of observations at prediction locations (optional -- include if 
+#			prediction metrics are desired)
+#	
+#	Rstar -- matrix of covariates at training locations
+#   tr.assign -- Assignments of training data
+#   
+predictMixExp.predkmeans <- function(object, R,...){
+
+if (!is.null(object)){
+	if(!inherits(object, c("predkmeans"))){
+		stop("Input 'object' must be of class predkmeans.")
+	}
+}
+
+	Rg <- R %*% object$mixExp$res.best$gamma
+	Rg <- apply(Rg, 2, function(x) 1/rowSums(exp(Rg-x)))
+	test.pred <- apply(Rg, 1, which.max)
+
+
+out <- test.pred
+return(out)
+}
+
+
+
+
+
 
 
 ##' @name predictionMetrics
