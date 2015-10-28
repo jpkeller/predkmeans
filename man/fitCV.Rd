@@ -4,10 +4,10 @@
 \alias{fitCV}
 \title{Cross-validation of Predictive K-means Clustering}
 \usage{
-fitCV(X, R, K, cv.groups = 10, doKmeans = FALSE, scale = TRUE,
-  covarnames = NULL, PCA = FALSE, pcacovarnames = colnames(R), npca = 5,
-  TPRS = TRUE, TPRSdf = 5, TPRSxname = "x", TPRSyname = "y",
-  sigma2 = 0, sigma2fixed = FALSE, mu = NULL, muStart = c("kmeans",
+fitCV(X, R, K, cv.groups = 10, doKmeans = FALSE, sigma2 = 0,
+  sigma2fixed = FALSE, scale = TRUE, covarnames = NULL, PCA = FALSE,
+  pcacovarnames = colnames(R), npca = 5, TPRS = TRUE, TPRSdf = 5,
+  TPRSxname = "x", TPRSyname = "y", mu = NULL, muStart = c("kmeans",
   "random"), maxitEM = 100, tol = 1e-05, convEM = c("both", "mu",
   "gamma"), nStarts = 1, maxitMlogit = 500, verbose = 0,
   muRestart = 1000, returnAll = FALSE, ...)
@@ -29,14 +29,14 @@ fitCV(X, R, K, cv.groups = 10, doKmeans = FALSE, scale = TRUE,
     kmeans? Note: If sigma2=0 and sigma2fixed=TRUE, then doKmeans is
     is set to TRUE, and no predictive k-means is done.}
 
-\item{scale}{Should the outcomes be re-scaled within each training
-group?}
-
 \item{sigma2}{starting value of sigma2 (ADD SPECIAL CASE OF 0 here)}
 
 \item{sigma2fixed}{Logical indicating whether sigma2
 should be held fixed.  If FALSE, then
 sigma2 is estimated using Maximum Likelihood.}
+
+\item{scale}{Should the outcomes be re-scaled within each training
+group?}
 
 \item{mu}{= starting values for centers. If NULL (default),
 then value is chosen according to \code{muStart}.}
@@ -75,33 +75,17 @@ included in the output.}
 
 \item{...}{Additional arguments passed to \code{\link{mlogit}}}
 }
-\value{
-An object of class \code{predkmeans}, containing the following elements:
-\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. (TO BE COMPLETED)}
-\item{center}{Matrix of cluster centers}
-\item{cluster}{Vector of cluster labels assigned to observations}
-\item{K}{Number of clusters}
-	\item{sigam2}{Final value of sigma^2.}
-\item{wSS}{Mean within-cluster sum-of-squares}
-\item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
-}
 \description{
 Performs cross-validation of predictive-kmeans on a dataset.
 }
 \details{
-The algorithm for sovling the mixture of Experts model is
-		based upon the approach presented by Jordan and Jacobs (1994).  If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then kmeans clustering is done instead.
+To be added....
 }
 \author{
 Joshua Keller
 }
-\references{
-Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
-		experts and the EM algorithm. \emph{Neural computation 6}(2),
-		 181-214.
-}
 \seealso{
-\code{\link{predictML.predkmeans}}
+\code{\link{predkmeans}}, \code{\link{predictCV}}
 
 Other 'predkmeans methods': \code{\link{predkmeans}}
 }

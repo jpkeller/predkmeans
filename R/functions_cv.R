@@ -60,31 +60,18 @@
 ##'		included in the output.
 ##' @param ... Additional arguments passed to \code{\link{mlogit}}
 ##
-##' @details The algorithm for sovling the mixture of Experts model is 
-##'		based upon the approach presented by Jordan and Jacobs (1994).  If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then kmeans clustering is done instead.
+##' @details To be added....
 ##
 ##' @family 'predkmeans methods'
-##' @seealso \code{\link{predictML.predkmeans}}
-##' @references Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
-##'		experts and the EM algorithm. \emph{Neural computation 6}(2),
-##'		 181-214.
+##' @seealso \code{\link{predkmeans}}, \code{\link{predictCV}}
 ##
 ##' @author Joshua Keller
 ##' @export
-##'	@return  An object of class \code{predkmeans}, containing the following elements:
-##' \item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. (TO BE COMPLETED)}
-##' \item{center}{Matrix of cluster centers}
-##' \item{cluster}{Vector of cluster labels assigned to observations}
-##' \item{K}{Number of clusters}
-##'	\item{sigam2}{Final value of sigma^2.}
-##' \item{wSS}{Mean within-cluster sum-of-squares}
-##' \item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
-##list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])
+#
 #		Author: J. Keller
 #		Original Date: October 2015
 #
-fitCV <- function(X, R, K, cv.groups=10, doKmeans=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, pcacovarnames=colnames(R), npca=5, TPRS=TRUE,TPRSdf=5, TPRSxname="x", TPRSyname="y",sigma2=0,  sigma2fixed=FALSE, 
- mu=NULL, muStart=c("kmeans","random"), maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
+fitCV <- function(X, R, K, cv.groups=10, doKmeans=FALSE, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, pcacovarnames=colnames(R), npca=5, TPRS=TRUE,TPRSdf=5, TPRSxname="x", TPRSyname="y", mu=NULL, muStart=c("kmeans","random"), maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
 	
 	fncall <- match.call()
 	
@@ -176,6 +163,18 @@ return(list(call=fncall, kres=kres, pres=pres, setup=setup))
 }	
 
 
+##
+##' @name predictCV
+## 
+##' @title Prediction from Cross-validation of Predictive K-means Clustering
+##
+##' @description Performs cross-validation of predictive-kmeans on a dataset.
+##
+##' @seealso \code{\link{fitCV}}
+##
+##' @author Joshua Keller
+##' @export
+##
 predictCV <- function(fitCV, X, R, method=c("ML", "MixExp", "SVM"), doMetrics =FALSE, covarnames=NULL, PCA=FALSE, pcacovarnames=colnames(R), npca=5, TPRS=TRUE,TPRSdf=5, TPRSxname="x", TPRSyname="y", ...) {
 
 predpres <- vector("list", length(fitCV$setup))

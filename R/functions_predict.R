@@ -190,13 +190,13 @@ if (!is.null(object)){
 	}
 }
 
-	Rg <- R %*% object$mixExp$res.best$gamma
+	Rg <- R %*% object$res.best$gamma
 	Rg <- apply(Rg, 2, function(x) 1/rowSums(exp(Rg-x)))
 	test.pred <- apply(Rg, 1, which.max)
 
 
-out <- test.pred
-return(out)
+# Return as list to match other functions
+return(list(test.pred=test.pred))
 }
 
 
