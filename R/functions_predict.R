@@ -222,7 +222,7 @@ return(out)
 ##' \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
 ##' \item{pred.acc}{Proportion of cluster labels correctly predicted.}
 ##' \item{MSME}{Mean squared misclassification error.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
-predictionMetrics <- function(centers, cluster.pred, X){		
+predictionMetrics <- function(centers, cluster.pred, X, labels=TRUE){		
 	if (class(X)!="matrix") X <- as.matrix(X)
 	if (class(centers)!="matrix") centers <- as.matrix(centers)
 	if(ncol(centers)!=ncol(X)) stop("Number of columns in 'centers' and 'X' should be the same.")
@@ -237,7 +237,11 @@ predictionMetrics <- function(centers, cluster.pred, X){
 	wSS <- sum((X - centers[cluster.assign,])^2)/nrow(X)
 	MSPE <- sum((X - centers[cluster.pred,])^2)/nrow(X)
 	
-	res <- list(cluster.pred= cluster.pred, cluster.assign= cluster.assign, MSPE=MSPE, wSS=wSS, pred.acc= pred.acc,  MSME=MSME)	
+	if (labels) {
+		res <- list(MSPE=MSPE, wSS=wSS, MSME=MSME, pred.acc= pred.acc, cluster.pred= cluster.pred, cluster.assign= cluster.assign)	
+	} else {
+		res <- list(MSPE=MSPE, wSS=wSS, MSME=MSME, pred.acc= pred.acc)	
+	}
 	res
 }
 

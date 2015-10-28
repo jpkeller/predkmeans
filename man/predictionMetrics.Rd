@@ -4,7 +4,7 @@
 \alias{predictionMetrics}
 \title{Measures of Prediction Performance}
 \usage{
-predictionMetrics(centers, cluster.pred, X)
+predictionMetrics(centers, cluster.pred, X, labels = TRUE)
 }
 \arguments{
 \item{centers}{Matrix of Cluster centers}
