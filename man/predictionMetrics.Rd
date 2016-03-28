@@ -9,15 +9,17 @@ predictionMetrics(centers, cluster.pred, X, labels = TRUE)
 \arguments{
 \item{centers}{Matrix of Cluster centers}
 
-\item{cluster.pred}{vector of predicted cluster membership.  Assumed to be integers
-                corresponding to rows of \code{centers}.}
+\item{cluster.pred}{Vector of predicted cluster membership. Should be integers
+        or names corresponding to rows of \code{centers}.}
 
 \item{X}{Matrix of observations at prediction locations.}
+
+\item{labels}{Logical indicating whether cluster prediction and}
 }
 \value{
 A list with the following elements:
-\item{cluster.pred}{Predicted cluster assignments}
-\item{cluster.assign}{'Best' cluster assignments (i.e. assignment to closest cluster center)}
+\item{cluster.pred}{Predicted cluster assignments (same as argument provided).}
+\item{cluster.assign}{Integer vector of 'best' cluster assignments (i.e. assignment to closest cluster center)}
 \item{MSPE}{Mean squared prediction error. Sum of squared distances between observations and predicted cluster centers.}
 \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
 \item{pred.acc}{Proportion of cluster labels correctly predicted.}
@@ -25,6 +27,9 @@ A list with the following elements:
 }
 \description{
 Computes several measures of performance for cluster label prediction.
+}
+\author{
+Joshua Keller
 }
 \seealso{
 \code{\link{predictML}}

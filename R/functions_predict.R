@@ -182,7 +182,7 @@ return(out)
 #	Rstar -- matrix of covariates at training locations
 #   tr.assign -- Assignments of training data
 #   
-predictMixExp.predkmeans <- function(object, R,...){
+predictMixExp.predkmeans <- function(object, R){
 
 if (!is.null(object)){
 	if(!inherits(object, c("predkmeans"))){
@@ -209,26 +209,29 @@ return(list(test.pred=test.pred))
 ##' @title Measures of Prediction Performance
 ##' @description Computes several measures of performance for cluster label prediction.
 ##' @param centers Matrix of Cluster centers
-##' @param cluster.pred vector of predicted cluster membership.  Assumed to be integers
-##'					corresponding to rows of \code{centers}.
+##' @param cluster.pred Vector of predicted cluster membership. Should be integers
+##'			or names corresponding to rows of \code{centers}.
 ##'	@param X Matrix of observations at prediction locations.
+##' @param labels Logical indicating whether cluster prediction and 
+##			assignment labels should be returned.
 ##
-##' @export
-##' @seealso \code{\link{predictML}}
 ##' @return A list with the following elements:
-##' \item{cluster.pred}{Predicted cluster assignments}
-##' \item{cluster.assign}{'Best' cluster assignments (i.e. assignment to closest cluster center)}
+##' \item{cluster.pred}{Predicted cluster assignments (same as argument provided).}
+##' \item{cluster.assign}{Integer vector of 'best' cluster assignments (i.e. assignment to closest cluster center)}
 ##' \item{MSPE}{Mean squared prediction error. Sum of squared distances between observations and predicted cluster centers.}
 ##' \item{wSS}{Within-cluster sum-of-squares.  Sum of squared distances between observations at prediction locations and best (i.e. closest) cluster center.}
 ##' \item{pred.acc}{Proportion of cluster labels correctly predicted.}
 ##' \item{MSME}{Mean squared misclassification error.  Sum of squared distances between predicted cluster center and best (i.e. closest) cluster center.}
+##' @export
+##'	@author Joshua Keller
+##' @seealso \code{\link{predictML}}
 predictionMetrics <- function(centers, cluster.pred, X, labels=TRUE){		
 	if (class(X)!="matrix") X <- as.matrix(X)
 	if (class(centers)!="matrix") centers <- as.matrix(centers)
 	if(ncol(centers)!=ncol(X)) stop("Number of columns in 'centers' and 'X' should be the same.")
 	if(length(cluster.pred)!=nrow(X)) stop("Length of cluster.pred should equal number of rows in X.")
 	K <- nrow(centers)
-	if (any(!unique(cluster.pred) %in% 1:K)) stop("cluster.pred must be integers within 1 to K=nrow(centers)")
+	if (any(!unique(cluster.pred) %in% c(1:K, rownames(centers)))) stop("cluster.pred must be integers within 1 to K or row names of 'centers'.")
 	
 
 	cluster.assign <- assignCluster(X, centers= centers)
@@ -243,7 +246,7 @@ predictionMetrics <- function(centers, cluster.pred, X, labels=TRUE){
 		res <- list(MSPE=MSPE, wSS=wSS, MSME=MSME, pred.acc= pred.acc)	
 	}
 	res
-}
+} # predictionMetrics
 
 
 

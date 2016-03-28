@@ -23,22 +23,26 @@
 ##' cluster centers that are influenced by prediction covariates
 ##
 ## Inputs:
-##' @param X Outcome data
-##' @param R Covariates
+##' @param X An \code{n} by \code{p} matrix or data frame of data to be clustered.
+##' @param R Covariates used for clustering. Required unless doing k-means
+##'		clustering (i.e. \code{sigma2=0} and \code{sigma2fixed=TRUE}).
 ##' @param K Number of clusters
 ##' @param mu = starting values for centers. If NULL (default), 
 ##'  	then value is chosen according to \code{muStart}.
 ##' @param muStart Character string indicating how initial value
 ##'  	of mu should be selected. Only used if mu=NULL.  Possible
-##' 	values are "random" (default) or "kmeans".
-##' @param sigma2 starting value of sigma2 (ADD SPECIAL CASE OF 0 here)
+##' 	values are \code{"random"} (default) or \code{"kmeans"}.
+##' @param sigma2 starting value of sigma2. If set to \code{0} and
+##'		\code{sigma2fixed=TRUE}, the standard k-means is done
+##'		instead of predictive k-means.
 ##' @param sigma2fixed Logical indicating whether sigma2
 ##'		should be held fixed.  If FALSE, then
 ##'		sigma2 is estimated using Maximum Likelihood.
 ##' @param maxitEM Maximum number of EM iterations for
-##' 	finding the Mixture of Experts solution
+##' 	finding the Mixture of Experts solution. If doing regular
+##'		k-means, this is passed as \code{iter.max}.
 ##' @param tol convergence criterion
-##' @param maxitMlogit Maximum number of iterations in the=
+##' @param maxitMlogit Maximum number of iterations in the
 ##'   	mlogit optimization (nested within EM algorithm)
 ##' @param muRestart  Gives max number of attempts at picking
 ##'    	starting values. Only used when muStart='random'.
@@ -58,8 +62,21 @@
 ##' @param ... Additional arguments passed to \code{\link{mlogit}}
 ##
 ##' @details The algorithm for sovling the mixture of Experts model is 
-##'		based upon the approach presented by Jordan and Jacobs (1994).  If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then kmeans clustering is done instead.
-##
+##'		based upon the approach presented by Jordan and Jacobs (1994). 
+##'
+##'		If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
+##'
+##' The first element of the output is \code{res.best}, which contains results from the best-fitting
+##' solution for the normal mixture model.  The elements of the list are:
+##' \describe{
+##'   \item{mu}{Maximum-likelihood estimate of intercepts from normal mixture model. These are the cluster centers.}
+##'   \item{gamma}{Maximum-likelihood estimates of the mixture coefficeints.}
+##'   \item{sigma2}{If \code{sigma2fixed=FALSE}, the maximum likelihood estimate of \code{sigma2}}
+##'   \item{conv}{Indicator of covergence.}
+##'   \item{objective}{Value of the log-likelihood.}
+##'   \item{iter}{Number of iterations.}
+##'   \item{mfit}{A subset of output from \code{\link{mlogit}}.}
+##' }
 ##' @family 'predkmeans methods'
 ##' @seealso \code{\link{predictML.predkmeans}}
 ##' @references Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
@@ -69,7 +86,8 @@
 ##' @author Joshua Keller
 ##' @export
 ##'	@return  An object of class \code{predkmeans}, containing the following elements:
-##' \item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. (TO BE COMPLETED)}
+##' \item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. See Details.}
+
 ##' \item{center}{Matrix of cluster centers}
 ##' \item{cluster}{Vector of cluster labels assigned to observations}
 ##' \item{K}{Number of clusters}
@@ -77,18 +95,7 @@
 ##' \item{wSS}{Mean within-cluster sum-of-squares}
 ##' \item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
 ##list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])
-#		Author: J. Keller
-#		Original Date: February 2014
-#		Last modified: June 2015
-# 
-#	Changelog:
-#		16 June 2015 -- Changed to update new function names as part
-#						of creating package.
-#		15 July 2015 -- Changing to account for the fact that
-#						mlogit now beta has a column of zeros
-#						......still need to do.
-#		17 July 2015 -- mixExp
-#		20 July 2015 -- changed function name to predkmeans
+##
 predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,  sigma2fixed=FALSE,maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
 	
 	if(is.null(K)){
@@ -111,7 +118,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 
 	# If sigma2 is 0 and fixed, then return kmeans result
 	if (sigma2==0 && sigma2fixed){
-			res.best <- kmeans(x=X, centers=K, nstart=nStarts)
+			res.best <- kmeans(x=X, centers=K, nstart=nStarts, iter.max=maxitEM)
 	centers <- res.best$centers
 	tr.assign <- res.best$cluster
 	wSS <- res.best$tot.withinss
@@ -262,7 +269,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 ##' @param x object of class \code{predkmeans}
 ##' @param ... Ignored additional arguments.
 ##' @export
-##' @family predkmeans methods
+##' @family 'predkmeans methods'
 print.predkmeans <- function(x, ...){
 	if(class(x)!="predkmeans"){
 		stop("x must be of class predkmeans.")

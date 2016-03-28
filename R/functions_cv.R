@@ -4,12 +4,13 @@
 ##
 ## This file contains:
 ##
-##	fitCV()
-##	predictCV()
-
+##	predkmeansCVest()
+##	predkmeansCVpred()
+##  print.predkmeansCVest()
+##  print.predkmeansCVpred()
 
 ##
-##' @name fitCV
+##' @name predkmeansCVest
 ## 
 ##' @title Cross-validation of Predictive K-means Clustering
 ##
@@ -17,45 +18,28 @@
 ##
 ## Inputs:
 ##' @param X Outcome data
-##' @param R Covariates
+##' @param R Covariates. Coerced to data frame.
 ##' @param K Number of clusters
 ##' @param cv.groups A list or matrix providing the cross-validation
 ##'		groups for splitting the data.  Alternatively, a single
 ##'		number giving the number of groups into which the
 ##'		data are randomly split. A value of '0' implies leave-one-out.
 ##'		Defaults to 10.
-##'	@param doKmeans Should kmeans also be done, in addition to predictive
-##'		kmeans? Note: If sigma2=0 and sigma2fixed=TRUE, then doKmeans is
-##'		is set to TRUE, and no predictive k-means is done.
 ##'	@param scale Should the outcomes be re-scaled within each training
 ##'		group?
-##' @param mu = starting values for centers. If NULL (default), 
-##'  	then value is chosen according to \code{muStart}.
-##' @param muStart Character string indicating how initial value
-##'  	of mu should be selected. Only used if mu=NULL.  Possible
-##' 	values are "random" (default) or "kmeans".
-##' @param sigma2 starting value of sigma2 (ADD SPECIAL CASE OF 0 here)
+##'	@param covarnames Names of covariates to be included directly.
+##' @param PCA Logical indicator for whether PCA components should be computed
+##'		from R.
+##'	@param PCAcontrol Arguments passed to \code{\link{createPCAmodelmatrix}}. This includes \code{ncomps}.
+##' @param TPRS Logical indicator for whether thin-plate regression
+##'		splines should be created and added to covariates.
+##'	@param TPRScontrol Arguments passed to \code{\link{createTPRSmodelmatrix}}. This includes \code{df}.
+##' @param sigma2 starting value of sigma2. Note: If sigma2=0 and 
+##'		sigma2fixed=TRUE, then regular k-means is done in place of  
+##'		predictive k-means.
 ##' @param sigma2fixed Logical indicating whether sigma2
 ##'		should be held fixed.  If FALSE, then
 ##'		sigma2 is estimated using Maximum Likelihood.
-##' @param maxitEM Maximum number of EM iterations for
-##' 	finding the Mixture of Experts solution
-##' @param tol convergence criterion
-##' @param maxitMlogit Maximum number of iterations in the=
-##'   	mlogit optimization (nested within EM algorithm)
-##' @param muRestart  Gives max number of attempts at picking
-##'    	starting values. Only used when muStart='random'.
-##'		If selected starting values for mu are constant
-##'     within each cluster, then the starting values
-##'     are re-selected up to muRestart times.
-##' @param  convEM  controls the measure of convergence for the 
-##'     EM algorithm.  Should be one of "mu", "gamma", or
-##'	    "both".  Defaults to "both."  The EM algorithm 
-##'     stops when the Frobenius norm of the change in mu,
-##'		the change in gamma, or the change in mu and the change in gamma
-##'		is less than 'tol'.
-##' @param  verbose numeric vector indicating how much output to produce
-##' @param nStarts number of times to perform EM algorithm 
 ##' @param returnAll A list containing all \code{nStarts} solutions is
 ##'		included in the output.
 ##' @param ... Additional arguments passed to \code{\link{mlogit}}
@@ -63,7 +47,7 @@
 ##' @details To be added....
 ##
 ##' @family 'predkmeans methods'
-##' @seealso \code{\link{predkmeans}}, \code{\link{predictCV}}
+##' @seealso \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
 ##
 ##' @author Joshua Keller
 ##' @export
@@ -71,31 +55,36 @@
 #		Author: J. Keller
 #		Original Date: October 2015
 #
-fitCV <- function(X, R, K, cv.groups=10, doKmeans=FALSE, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, pcacovarnames=colnames(R), npca=5, TPRS=TRUE,TPRSdf=5, TPRSxname="x", TPRSyname="y", mu=NULL, muStart=c("kmeans","random"), maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
+predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=TRUE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
 	
+	R <- as.data.frame(R)
 	fncall <- match.call()
+	if(is.null(K)){
+		stop("K not provided.  Please provide.")
+	}
 	
-	
-if(is.null(K)){
-	stop("K not provided.  Please provide.")
-}
-
+	# Fill in defaults for TPRScontrol
+	TPRScontrol.default <- eval(formals(predkmeansCVest)$TPRScontrol)
+	for (i in names(TPRScontrol.default)){
+		TPRScontrol[[i]] <- 	TPRScontrol.default[[i]]
+	}
+	# Fill in defaults for PCAcontrol
+	PCAcontrol.default <- eval(formals(predkmeansCVest)$PCAcontrol)
+	for (i in names(TPRScontrol.default)){
+		PCAcontrol[[i]] <- 	PCAcontrol.default[[i]]
+	}
+		
 # Checks for cv.groups.
 # List, matrix, numeric.	
-# Assume list for now.
+# Assume list for now.	
+if (!is.list(cv.groups)){
+	stop("cv.groups must be list. Other formats not yet implemented")
+}
 
 ids <- rownames(X)
 
-if(sigma2==0 & sigma2fixed){
-	doPredKmeans <- FALSE
-	doKmeans <- TRUE
-} else {
-	doPredKmeans <- TRUE
-}
-
 setup <- vector("list", length(cv.groups))
-if (doKmeans) kres <- vector("list", length(cv.groups))
-if (doPredKmeans) pres <- vector("list", length(cv.groups))
+pkm <- vector("list", length(cv.groups))
 
 for (i in 1:length(cv.groups)){
 	test.set <- cv.groups[[i]]
@@ -117,12 +106,12 @@ for (i in 1:length(cv.groups)){
 	training.covars <- R[training.set, covarnames, drop=FALSE]
 	test.covars <- R[test.set, covarnames, drop=FALSE]
 	if (PCA){
-		pcafit <- get_PCA_matrix(data=R[training.set, pcacovarnames, drop=FALSE], ncomps=npca, matrixonly=FALSE)
+		pcafit <- do.call(createPCAmodelmatrix, args=c(list(data=R[training.set, ,drop=FALSE], matrixonly=FALSE), PCAcontrol))
 		training.covars <- cbind(training.covars, pcafit$X)
-		test.covars <- cbind(test.covars , predict(pcafit$pca, newdata= R[test.set,])[, 1:npca, drop=FALSE])
+		test.covars <- cbind(test.covars , predict(pcafit$pca, newdata= R[test.set,])[, 1:ncol(pcafit$X), drop=FALSE])
 	}
 	if (TPRS){
-	    tprs.train <- get_TPRS_modelmatrix(data=cbind(training.covars, R[training.set,]), TPRSdf=TPRSdf, covarnames=colnames(training.covars), xname=TPRSxname, yname=TPRSyname, matrixonly=FALSE)
+	    tprs.train <- do.call(createTPRSmodelmatrix, args=c(list(data=cbind(training.covars, R[training.set,]),  covarnames=colnames(training.covars),  matrixonly=FALSE), TPRScontrol))
 	    training.covars <- tprs.train$X
 	    test.covars <- predict(tprs.train$gamfit, newdata=cbind(R[test.set,], test.covars), type="lpmatrix")
 	} else{
@@ -133,73 +122,73 @@ for (i in 1:length(cv.groups)){
 		names(test.covars)[1] <- "(Intercept)"
 		test.covars <- as.matrix(test.covars)
 	}
+		
+	pres.i <- predkmeans(X=training.data, R=training.covars, K=K, sigma2=sigma2, sigma2fixed=sigma2fixed,...)
+	pkm[[i]] <- pres.i
+	pkm[[i]]$test.set <- test.set
+	pkm[[i]]$training.set <- training.set	
+	pkm[[i]]$scale.center <- scale.center
+	pkm[[i]]$scale.scale <- scale.scale
 
-	if (doKmeans){
-		kres.i <- predkmeans(X=training.data, R=training.covars, K=K, nStarts=nStarts, sigma2=0, sigma2fixed=TRUE, ...)
-		kres[[i]] <- kres.i
-		kres[[i]]$test.set <- test.set
-		kres[[i]]$training.set <- training.set
-		kres[[i]]$scale.center <- scale.center
-		kres[[i]]$scale.scale <- scale.scale		
-	} else {
-		kres <- NULL
-	}
-
-	if (doPredKmeans) {
-		pres.i <- predkmeans(X=training.data, R=training.covars, K=K, sigma2=sigma2, sigma2fixed=sigma2fixed, nStarts=nStarts,...)
-		pres[[i]] <- pres.i
-		pres[[i]]$test.set <- test.set
-		pres[[i]]$training.set <- training.set	
-		pres[[i]]$scale.center <- scale.center
-		pres[[i]]$scale.scale <- scale.scale
-	} else {
-		pres <- NULL
-	}
-	
 	setup[[i]] <- list(training.set=training.set, test.set=test.set, scale.center=scale.center, scale.scale=scale.scale)
 }
 		
-return(list(call=fncall, kres=kres, pres=pres, setup=setup))
+out <- list(call=fncall, pkm=pkm, setup=setup, PCA=PCA, PCAcontrol=PCAcontrol, TPRS=TPRS, TPRScontrol=TPRScontrol, covarnames=covarnames, X=X, R=R, K=K)
+class(out) <- "predkmeansCVest"
+return(out)
 }	
 
 
 ##
-##' @name predictCV
+##' @name predkmeansCVpred
 ## 
 ##' @title Prediction from Cross-validation of Predictive K-means Clustering
 ##
 ##' @description Performs cross-validation of predictive-kmeans on a dataset.
 ##
-##' @seealso \code{\link{fitCV}}
+##' @param object A \code{predkmeansCVest} object. See \code{\link{predkmeansCVest}}.
+##'	@param X Matrix of observations
+##' @param R matrix of covariates.
+##' @param method Character string indicating which prediciton method should be used. Optins are \code{ML}, \code{MixExp}, and \code{SVM}. See \code{\link{predictML}} for more information.
+##' @param ... Additional arguments passed to the prediction method.
+
+##' @seealso \code{\link{predkmeansCVest}}, \code{\link{predictML}}
 ##
 ##' @author Joshua Keller
 ##' @export
 ##
-predictCV <- function(fitCV, X, R, method=c("ML", "MixExp", "SVM"), doMetrics =FALSE, covarnames=NULL, PCA=FALSE, pcacovarnames=colnames(R), npca=5, TPRS=TRUE,TPRSdf=5, TPRSxname="x", TPRSyname="y", ...) {
+predkmeansCVpred <- function(object, X=object$X, R=object$R, method=c("ML", "MixExp", "SVM"),  ...) {
 
-predpres <- vector("list", length(fitCV$setup))
-metrics <- predpres
-setup <- fitCV$setup 
-for (i in 1:length(fitCV$setup)){
-	test.set <- setup[[i]]$test.set
-	training.set <- setup[[i]]$training.set
+	if(!inherits(object, "predkmeansCVest")) stop("problem!")
+type <- match.arg(type)
+method <- match.arg(method)
+
+if (type!="predkmeans" & method=="MixExp") warning("Method 'MixExp' only defined for predictive k-means. Not performing prediction for k-means centers.")
+
+pkm <- vector("list", length(object$setup))
+metrics <- vector("list", length(object$setup))
+
+
+for (i in 1:length(object$setup)){
+	test.set <- object$setup[[i]]$test.set
+	training.set <- object$setup[[i]]$training.set
 
 	training.data <- X[training.set, , drop=FALSE]
 	test.data <- X[test.set, , drop=FALSE]
-    if (!is.null(setup[[i]]$scale.center)){
-        test.data <- scale(test.data, center=setup[[i]]$scale.center, scale=setup[[i]]$scale.scale)
+    if (!is.null(object$setup[[i]]$scale.center)){
+        test.data <- scale(test.data, center=object$setup[[i]]$scale.center, scale=object$setup[[i]]$scale.scale)
     }
     
    	# Create Training and Test Covariates
-	training.covars <- R[training.set, covarnames, drop=FALSE]
-	test.covars <- R[test.set, covarnames, drop=FALSE]
-	if (PCA){
-		pcafit <- get_PCA_matrix(data=R[training.set, pcacovarnames, drop=FALSE], ncomps=npca, matrixonly=FALSE)
+	training.covars <- R[training.set, object$covarnames, drop=FALSE]
+	test.covars <- R[test.set, object$covarnames, drop=FALSE]
+	if (object$PCA){
+		pcafit <- do.call(createPCAmodelmatrix, args=c(list(data=R[training.set, ,drop=FALSE], matrixonly=FALSE), object$PCAcontrol))
 		training.covars <- cbind(training.covars, pcafit$X)
-		test.covars <- cbind(test.covars , predict(pcafit$pca, newdata= R[test.set,])[, 1:npca, drop=FALSE])
+		test.covars <- cbind(test.covars , predict(pcafit$pca, newdata= R[test.set,])[, 1:ncol(pcafit$X), drop=FALSE])
 	}
-	if (TPRS){
-	    tprs.train <- get_TPRS_modelmatrix(data=cbind(training.covars, R[training.set,]), TPRSdf=TPRSdf, covarnames=colnames(training.covars), xname=TPRSxname, yname=TPRSyname, matrixonly=FALSE)
+	if (object$TPRS){
+	  	tprs.train <- do.call(createTPRSmodelmatrix, args=c(list(data=cbind(training.covars, R[training.set,]),  covarnames=colnames(training.covars),  matrixonly=FALSE), object$TPRScontrol))
 	    training.covars <- tprs.train$X
 	    test.covars <- predict(tprs.train$gamfit, newdata=cbind(R[test.set,], test.covars), type="lpmatrix")
 	} else{
@@ -213,49 +202,80 @@ for (i in 1:length(fitCV$setup)){
 
 	predfn <- switch(method, ML=predictML.predkmeans, MixExp=predictMixExp.predkmeans, SVM=predictSVM.predkmeans)
 	
-	predpres[[i]] <- predfn(object=fitCV$pres[[i]], Rstar=training.covars, R=test.covars,...)	
-	if (doMetrics)	metrics[[i]] <- predictionMetrics(centers=fitCV$pres[[i]]$centers, cluster.pred=predpres[[i]]$test.pred,X=test.data, labels=FALSE)
+	
+	if (type=="predkmeans") {
+		predobj <- object$pkm[[i]]
+	} else if (type=="kmeans") {
+		predobj <- object$km[[i]]	
+	}
+	pkm[[i]] <- predfn(object= predobj, Rstar=training.covars, R=test.covars,...)
+
+	metrics[[i]] <- unlist(predictionMetrics(centers= predobj $centers, cluster.pred=pkm[[i]]$test.pred, X=test.data, labels=FALSE))
+}
+
+	out <- list(res=pkm, type=type, method=method)
+	out$metrics <- simplify2array(metrics)
+
+class(out) <- "predkmeansCVpred"
+return(out)
 }	
 
-if(doMetrics){
-	return(list(out=predpres, metrics=metrics))
-} else {
-	return(predpres)
-}
-}	
 
-
-
-
-get_PCA_matrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
-	pca <- prcomp(data[,covarnames, drop=FALSE], center=center, scale=scale)
-	X <- pca$x[,1:ncomps, drop=FALSE]
-	if (matrixonly) {
-		return(X)
-	} else {
-		return(list(X=X, pca=pca))
+##' @title Print details for class \code{predkmeansCVest}
+##' @description \code{\link[base:print]{print}} method for class \code{predkmeansCVest}.
+##' @param x object of class \code{predkmeansCVest}
+##' @param ... Ignored additional arguments.
+##' @export
+##' @family 'predkmeansCVest methods'
+print.predkmeansCVest <- function(x, ...){
+	if(class(x)!="predkmeansCVest"){
+		stop("x must be of class predkmeansCVest.")
 	}
+	cat("Cross-validation fit for predictive k-means object with\n" )
+	cat("    ", x$K, "Clusters\n")
+	cat("    ", length(x$setup), "CV Groups\n")
+	cat("Model has:\n")
+	if(x$PCA) cat("    ", x$PCAcontrol$npca, "PCA components\n")
+	if(x$TPRS) cat("    ", x$TPRScontrol$df, "df TPRS\n")
+	invisible(x)
+}##print.predkmeansCVest()
+
+
+##' @title Print details for class \code{predkmeansCVpred}
+##' @description \code{\link[base:print]{print}} method for class \code{predkmeansCVpred}.
+##' @param x object of class \code{predkmeansCVpred}
+##' @param ... Ignored additional arguments.
+##' @export
+##' @family 'predkmeansCVpred methods'
+print.predkmeansCVpred <- function(x, ...){
+	if(class(x)!="predkmeansCVpred"){
+		stop("x must be of class predkmeansCVpred.")
+	}
+	cat("Cross-validation predictions for predictive k-means object.\n" )
+	cat("Predictions computed for", ifelse(x$type=="predkmeans", "predictive", "regular"), "k-means centers,\n")
+	cat("using ", x$method, ".\n", sep="")
+	invisible(x)
+}##print.predkmeansCVpred()
+
+
+##' @title Compute summary details for class \code{predkmeansCVpred}
+##' @description \code{\link[base:print]{summary}} method for class \code{predkmeansCVpred}.
+##' @param object object of class \code{predkmeansCVpred}
+##' @param ... Ignored additional arguments.
+##' @export
+##' @family predkmeans methods
+summary.predkmeansCVpred <- function(object, ...){
+	class(object) <- "summary.predkmeansCVpred"
+	object
+}##summary.predkmeansCVpred()
+
+##' @export
+print.summary.predkmeansCVpred <- function(x, ...){
+	cat("Cross-validation predictions for predictive k-means object.\n" )
+	cat("Predictions computed for", ifelse(x$type=="predkmeans", "predictive", "regular"), "k-means centers,\n")
+	cat("using ", x$method, ".\n", sep="")
+	cat("Prediction metrics are:\n")
+	print(rowMeans(x$metrics))
 }
 
 
-# Note k=df+1
-get_TPRS_modelmatrix <- function(data, TPRSdf=5, covarnames=NULL, xname="lambert_x", yname="lambert_y", matrixonly=TRUE, TPRSfx=TRUE){
-	require(mgcv)	
-
-	TPRSk <- TPRSdf + 1
-	# Create the formula
-	f <- ""
-	if (length(covarnames)>0){
-		f <- paste("+ ", paste0(covarnames, collapse=" + "))
-	}
-	f <- formula(paste0(xname,"~s(", xname,", ", yname,", fx=TPRSfx, k=TPRSk)", f))
-	# Fit a GAM to get the model matrix
-	gamfit <- gam(f, data=as.data.frame(data))
-	X  <- model.matrix(gamfit)
-
-	if(matrixonly){
-		return(X)
-	} else {
-		return(list(X=X, gamfit=gamfit))
-	}
-}

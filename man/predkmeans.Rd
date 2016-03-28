@@ -10,9 +10,10 @@ predkmeans(X, R, K, mu = NULL, muStart = c("kmeans", "random"),
   verbose = 0, muRestart = 1000, returnAll = FALSE, ...)
 }
 \arguments{
-\item{X}{Outcome data}
+\item{X}{An \code{n} by \code{p} matrix or data frame of data to be clustered.}
 
-\item{R}{Covariates}
+\item{R}{Covariates used for clustering. Required unless doing k-means
+clustering (i.e. \code{sigma2=0} and \code{sigma2fixed=TRUE}).}
 
 \item{K}{Number of clusters}
 
@@ -21,16 +22,19 @@ then value is chosen according to \code{muStart}.}
 
 \item{muStart}{Character string indicating how initial value
  of mu should be selected. Only used if mu=NULL.  Possible
-values are "random" (default) or "kmeans".}
+values are \code{"random"} (default) or \code{"kmeans"}.}
 
-\item{sigma2}{starting value of sigma2 (ADD SPECIAL CASE OF 0 here)}
+\item{sigma2}{starting value of sigma2. If set to \code{0} and
+\code{sigma2fixed=TRUE}, the standard k-means is done
+instead of predictive k-means.}
 
 \item{sigma2fixed}{Logical indicating whether sigma2
 should be held fixed.  If FALSE, then
 sigma2 is estimated using Maximum Likelihood.}
 
 \item{maxitEM}{Maximum number of EM iterations for
-finding the Mixture of Experts solution}
+finding the Mixture of Experts solution. If doing regular
+    k-means, this is passed as \code{iter.max}.}
 
 \item{tol}{convergence criterion}
 
@@ -43,7 +47,7 @@ stops when the Frobenius norm of the change in mu,
 
 \item{nStarts}{number of times to perform EM algorithm}
 
-\item{maxitMlogit}{Maximum number of iterations in the=
+\item{maxitMlogit}{Maximum number of iterations in the
 mlogit optimization (nested within EM algorithm)}
 
 \item{verbose}{numeric vector indicating how much output to produce}
@@ -61,7 +65,7 @@ included in the output.}
 }
 \value{
 An object of class \code{predkmeans}, containing the following elements:
-\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. (TO BE COMPLETED)}
+\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. See Details.}
 \item{center}{Matrix of cluster centers}
 \item{cluster}{Vector of cluster labels assigned to observations}
 \item{K}{Number of clusters}
@@ -75,7 +79,21 @@ cluster centers that are influenced by prediction covariates
 }
 \details{
 The algorithm for sovling the mixture of Experts model is
-		based upon the approach presented by Jordan and Jacobs (1994).  If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then kmeans clustering is done instead.
+		based upon the approach presented by Jordan and Jacobs (1994).
+
+		If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
+
+The first element of the output is \code{res.best}, which contains results from the best-fitting
+solution for the normal mixture model.  The elements of the list are:
+\describe{
+  \item{mu}{Maximum-likelihood estimate of intercepts from normal mixture model. These are the cluster centers.}
+  \item{gamma}{Maximum-likelihood estimates of the mixture coefficeints.}
+  \item{sigma2}{If \code{sigma2fixed=FALSE}, the maximum likelihood estimate of \code{sigma2}}
+  \item{conv}{Indicator of covergence.}
+  \item{objective}{Value of the log-likelihood.}
+  \item{iter}{Number of iterations.}
+  \item{mfit}{A subset of output from \code{\link{mlogit}}.}
+}
 }
 \author{
 Joshua Keller
@@ -88,6 +106,7 @@ Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 \seealso{
 \code{\link{predictML.predkmeans}}
 
-Other 'predkmeans methods': \code{\link{fitCV}}
+Other 'predkmeans methods': \code{\link{predkmeansCVest}};
+  \code{\link{print.predkmeans}}
 }
 

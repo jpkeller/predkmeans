@@ -32,10 +32,25 @@ assignCluster <- function(X, centers){
 
 
 
-
-# @title Get PCA comps for regression
-# @export
-get_PCA_matrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
+##' @name createPCAmodelmatrix
+##' @title Get PCA comps for regression
+##' @description Wrapper function for creating PCA components to be used
+##'		in a regression analysis.
+##
+##' @param data Matrix or data frame of data
+##' @param ncomps Number of PCA components to return.
+##' @param covarnames Names of variables or column numbers in \code{data}
+##'		on which the PCA is to be run.
+##'	@param center Logical indicator of whether \code{data} should be centered. Passed to \code{\link{prcomp}}.
+##'	@param scale Logical indicator of whether \code{data} should be scaled. Passed to \code{\link{prcomp}}.
+##' @param matrixonly Logical indicator of whether only the model matrix should
+##'		be returned, or the full output from \code{\link{prcomp}}.
+##
+##' @export
+##' @author Joshua Keller
+##' @seealso \code{\link{createTPRSmodelmatrix}}
+createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
+	if (ncomps>ncol(data)) stop("ncomps too large for data provided.")
 	pca <- prcomp(data[,covarnames, drop=FALSE], center=center, scale=scale)
 	X <- pca$x[,1:ncomps, drop=FALSE]
 	if (matrixonly) {
@@ -45,20 +60,35 @@ get_PCA_matrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE,
 	}
 }
 
-
-# @title Get matrix of TPRS for regression
-# @export
-get_TPRS_modelmatrix <- function(data, TPRSk =5, covarnames=NULL, xname="lambert_x", yname="lambert_y", matrixonly=TRUE, TPRSfx=TRUE){
+##' @name createTPRSmodelmatrix
+##' @title Get matrix of TPRS for regression
+##' @description Wrapper function for creating thin-plate regression splines (TPRS)
+##'		to be used in a regression analysis.
+##
+##' @param data Matrix or data frame of data
+##' @param df Degrees of freedom for thinplate splines. This does not include an intercept, so the \code{k} argument of \code{s()} is \eqn{k = df + 1}.
+##' @param covarnames Names of other covariates to be included in the model
+##'		matrix.
+##'	@param xname Name of variable the provides the x-coordinate of location.
+##'	@param yname Name of variable the provides the y-coordinate of location.
+##' @param matrixonly Logical indicator of whether only the model matrix should
+##'		be returned, or the full output from \code{\link{gam}}.
+##' @param TPRSfx Should the TPRS degrees of freedom be fixed. Passed as the \code{fx} argument to \code{s()}.
+##
+##' @export
+##' @author Joshua Keller
+##' @seealso \code{\link{createPCAmodelmatrix}}
+createTPRSmodelmatrix <- function(data, df=5, covarnames=NULL, xname="x", yname="y", TPRSfx=TRUE, matrixonly=TRUE){
 if(!requireNamespace("mgcv", quietly=TRUE)){
 	stop("mgcv is required to create TPRS objects.  Please install it.", call.=FALSE)
 }	
-	
+	TPRSk <- df + 1 # Add 1 for the intercept term
 	# Create the formula
 	f <- ""
 	if (length(covarnames)>0){
 		f <- paste("+ ", paste0(covarnames, collapse=" + "))
 	}
-	f <- formula(paste0(xname,"~s(", xname,", ", yname,", fx=TPRSfx, k=TPRSk)", f))
+	f <- formula(paste0(xname,"~s(", xname,", ", yname,", fx=", TPRSfx, ", k=", TPRSk, ")", f))
 	# Fit a GAM to get the model matrix
 	gamfit <- mgcv::gam(f, data=as.data.frame(data))
 	X  <- model.matrix(gamfit)

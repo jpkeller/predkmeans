@@ -1,6 +1,6 @@
 Package: predkmeans
 Title: Covariate adaptive clustering
-Version: 0.0.1.9007
+Version: 0.0.2
 Author: Joshua Keller
 Maintainer: Joshua Keller <kellerjp@uw.edu>
 Description: Description: What the package does (one paragraph).
