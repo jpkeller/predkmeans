@@ -66,11 +66,13 @@ predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE,
 	# Fill in defaults for TPRScontrol
 	TPRScontrol.default <- eval(formals(predkmeansCVest)$TPRScontrol)
 	for (i in names(TPRScontrol.default)){
+		if (names(TPRScontrol.default[[i]]) %in% names(TPRScontrol)) next;
 		TPRScontrol[[i]] <- 	TPRScontrol.default[[i]]
 	}
 	# Fill in defaults for PCAcontrol
 	PCAcontrol.default <- eval(formals(predkmeansCVest)$PCAcontrol)
 	for (i in names(TPRScontrol.default)){
+		if (names(PCAcontrol.default[[i]]) %in% names(PCAcontrol)) next;
 		PCAcontrol[[i]] <- 	PCAcontrol.default[[i]]
 	}
 		
@@ -160,14 +162,10 @@ return(out)
 predkmeansCVpred <- function(object, X=object$X, R=object$R, method=c("ML", "MixExp", "SVM"),  ...) {
 
 	if(!inherits(object, "predkmeansCVest")) stop("problem!")
-type <- match.arg(type)
 method <- match.arg(method)
-
-if (type!="predkmeans" & method=="MixExp") warning("Method 'MixExp' only defined for predictive k-means. Not performing prediction for k-means centers.")
 
 pkm <- vector("list", length(object$setup))
 metrics <- vector("list", length(object$setup))
-
 
 for (i in 1:length(object$setup)){
 	test.set <- object$setup[[i]]$test.set
@@ -213,7 +211,7 @@ for (i in 1:length(object$setup)){
 	metrics[[i]] <- unlist(predictionMetrics(centers= predobj $centers, cluster.pred=pkm[[i]]$test.pred, X=test.data, labels=FALSE))
 }
 
-	out <- list(res=pkm, type=type, method=method)
+	out <- list(res=pkm, method=method)
 	out$metrics <- simplify2array(metrics)
 
 class(out) <- "predkmeansCVpred"
