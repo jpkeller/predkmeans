@@ -18,7 +18,7 @@
   Rstar, K = nrow(centers), Xstar = NULL, tr.assign = object$cluster,
   svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)))
 
-\method{predictMixExp}{predkmeans}(object, R)
+\method{predictMixExp}{predkmeans}(object, R, Rstar = NULL)
 }
 \arguments{
 \item{object}{A predkmeans object, from which the cluster centers will be extracted.}

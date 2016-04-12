@@ -174,15 +174,11 @@ return(out)
 #
 # Need to add error checking for R
 # INPUT:
-#	centers -- Matrix of cluster centers, assumed to be K-by-p
+#	object -- A `predkmeans' object.
 #	R -- matrix of covariates for observations to be predicted at.  
-#	X -- matrix of observations at prediction locations (optional -- include if 
-#			prediction metrics are desired)
-#	
-#	Rstar -- matrix of covariates at training locations
-#   tr.assign -- Assignments of training data
+#	Rstar -- Not used; included as formal argument for programming convenience.
 #   
-predictMixExp.predkmeans <- function(object, R){
+predictMixExp.predkmeans <- function(object, R, Rstar=NULL){
 
 if (!is.null(object)){
 	if(!inherits(object, c("predkmeans"))){

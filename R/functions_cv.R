@@ -66,13 +66,13 @@ predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE,
 	# Fill in defaults for TPRScontrol
 	TPRScontrol.default <- eval(formals(predkmeansCVest)$TPRScontrol)
 	for (i in names(TPRScontrol.default)){
-		if (names(TPRScontrol.default[[i]]) %in% names(TPRScontrol)) next;
+		if (i %in% names(TPRScontrol)) next;
 		TPRScontrol[[i]] <- 	TPRScontrol.default[[i]]
 	}
 	# Fill in defaults for PCAcontrol
 	PCAcontrol.default <- eval(formals(predkmeansCVest)$PCAcontrol)
 	for (i in names(TPRScontrol.default)){
-		if (names(PCAcontrol.default[[i]]) %in% names(PCAcontrol)) next;
+		if (i %in% names(PCAcontrol)) next;
 		PCAcontrol[[i]] <- 	PCAcontrol.default[[i]]
 	}
 		
@@ -201,11 +201,8 @@ for (i in 1:length(object$setup)){
 	predfn <- switch(method, ML=predictML.predkmeans, MixExp=predictMixExp.predkmeans, SVM=predictSVM.predkmeans)
 	
 	
-	if (type=="predkmeans") {
-		predobj <- object$pkm[[i]]
-	} else if (type=="kmeans") {
-		predobj <- object$km[[i]]	
-	}
+
+	predobj <- object$pkm[[i]]
 	pkm[[i]] <- predfn(object= predobj, Rstar=training.covars, R=test.covars,...)
 
 	metrics[[i]] <- unlist(predictionMetrics(centers= predobj $centers, cluster.pred=pkm[[i]]$test.pred, X=test.data, labels=FALSE))
