@@ -42,7 +42,7 @@
 ##'		sigma2 is estimated using Maximum Likelihood.
 ##' @param returnAll A list containing all \code{nStarts} solutions is
 ##'		included in the output.
-##' @param ... Additional arguments passed to \code{\link{mlogit}}
+##' @param ... Additional arguments passed to \code{\link{predkmeans}}
 ##
 ##' @details To be added....
 ##

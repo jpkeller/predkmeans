@@ -107,11 +107,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 	muStart <- match.arg(muStart)
 	convEM <- match.arg(convEM)
 	
-	# Check dimensions
-	n <- nrow(X)
-	if (n!=nrow(R)){
-		stop("Number of outcome observations does not match number of covariate observations.")
-	} 
+
 	if (n<K){
 		stop("Cannot select more clusters than observations")
 	}
@@ -126,6 +122,13 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 		class(out) <- "predkmeans"
 	return(out)
 	}
+	
+	# Check dimensions, wait until now, in case doing k-means
+	# and R not needed
+	n <- nrow(X)
+	if (n!=nrow(R)){
+		stop("Number of outcome observations does not match number of covariate observations.")
+	} 
 	
 	d <- ncol(X) # Dimension of outcome
 	if (is.null(colnames(X))) colnames(X) <- paste0("X", 1:d)
