@@ -16,6 +16,7 @@
 }
 \seealso{
 Other 'predkmeans methods': \code{\link{predkmeansCVest}};
-  \code{\link{predkmeans}}
+  \code{\link{predkmeans}};
+  \code{\link{relevel.predkmeans}}
 }
 

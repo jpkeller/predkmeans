@@ -107,6 +107,7 @@ Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 \code{\link{predictML.predkmeans}}
 
 Other 'predkmeans methods': \code{\link{predkmeansCVest}};
-  \code{\link{print.predkmeans}}
+  \code{\link{print.predkmeans}};
+  \code{\link{relevel.predkmeans}}
 }
 

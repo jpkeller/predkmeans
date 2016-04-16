@@ -49,7 +49,7 @@ sigma2 is estimated using Maximum Likelihood.}
 \item{returnAll}{A list containing all \code{nStarts} solutions is
 included in the output.}
 
-\item{...}{Additional arguments passed to \code{\link{mlogit}}}
+\item{...}{Additional arguments passed to \code{\link{predkmeans}}}
 }
 \description{
 Performs cross-validation of predictive-kmeans on a dataset.
@@ -64,6 +64,7 @@ Joshua Keller
 \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
 
 Other 'predkmeans methods': \code{\link{predkmeans}};
-  \code{\link{print.predkmeans}}
+  \code{\link{print.predkmeans}};
+  \code{\link{relevel.predkmeans}}
 }
 

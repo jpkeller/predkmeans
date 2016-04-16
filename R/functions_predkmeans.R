@@ -8,6 +8,7 @@
 ##	print.predkmeans()
 ##	summary.predkmeans()
 ##	print.summary.predkmeans()
+##	relevel.predkmeans()
 ##	getExpMahal()
 ##  getH()
 ##	getMu()
@@ -107,7 +108,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 	muStart <- match.arg(muStart)
 	convEM <- match.arg(convEM)
 	
-
+	n <- nrow(X)
 	if (n<K){
 		stop("Cannot select more clusters than observations")
 	}
@@ -125,7 +126,6 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 	
 	# Check dimensions, wait until now, in case doing k-means
 	# and R not needed
-	n <- nrow(X)
 	if (n!=nrow(R)){
 		stop("Number of outcome observations does not match number of covariate observations.")
 	} 
@@ -310,6 +310,58 @@ print.summary.predkmeans <- function(x, ...){
 
 
 
+
+##' @name relevel.predkmeans
+##' @title Re-order cluster labels 
+##' @description Function for re-ordering the order of clusters in a predkmeans object.
+##
+##' @param x object of class \code{predkmeans}
+##' @param ref New reference group ("Cluster 1"). Only used if \code{order} is NULL.
+##' @param order New order of clusters. 
+##' @param ... Ignored additional arguments.
+##
+##' @details The elements of the \code{order} argument should refer
+##'		to the current position of clusters, with the position
+##'		giving the new order. So 'c(3, 1, 2)' moves 1 to 2, 2 to 3, and 3 to 1.
+##
+##' @author Joshua Keller
+##' @export
+##' @family 'predkmeans methods'
+relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
+	if(class(x)!="predkmeans"){
+		stop("x must be of class predkmeans.")
+	}
+	
+	if (is.null(order)){
+		if (is.null(ref)){
+			return(x)
+		}
+		if (length(ref)>1){
+			warning("Only first element of 'ref' used.")
+			ref <- ref[1]
+		}
+		ref <- suppressWarings(as.integer(ref))
+		if (is.na(ref)){
+			stop("Cannot convert 'ref' to integer.")
+		}
+		order <- 1:x$K
+		order <- c(ref, order[-ref])
+	}
+
+
+	xcluster <- x$cluster
+	for (k in 1:x$K){
+		x$cluster[xcluster==order[k]] <- k
+	}
+	x$res.best$cluster <- x$cluster
+	x$centers <- x$centers[order, ]
+	rownames(x$centers) <- 1:x$K
+	x$res.best$centers <- x$centers
+	x$res.best$withinss <- x$res.best$withinss[order]
+	x$res.best$size <- x$res.best$size[order]		
+	return(x)
+}## relevel.predkmeans
+	
 
 
 ###############################################
