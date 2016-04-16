@@ -130,6 +130,8 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 		stop("Number of outcome observations does not match number of covariate observations.")
 	} 
 	
+	R <- as.matrix(R)
+	
 	d <- ncol(X) # Dimension of outcome
 	if (is.null(colnames(X))) colnames(X) <- paste0("X", 1:d)
 	p <- ncol(R)
@@ -161,8 +163,9 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 		# Compute initial values for h (Step E-1)
 		h0 <- assignCluster(X, centers=mu)
 		h0 <- model.matrix(~0 + factor(h0, levels=1:K))
-		colnames(h0) <- paste0("C", 1:K)
-		
+		#colnames(h0) <- paste0("C", 1:K)
+		colnames(h0) <- 1:K
+				
 		# Compute mu, gamma, and sigma2 (Step M-1)
 		mu <- getMu(X, h0)
 		if(!sigma2fixed){
@@ -340,7 +343,7 @@ relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
 			warning("Only first element of 'ref' used.")
 			ref <- ref[1]
 		}
-		ref <- suppressWarings(as.integer(ref))
+		ref <- suppressWarnings(as.integer(ref))
 		if (is.na(ref)){
 			stop("Cannot convert 'ref' to integer.")
 		}
@@ -348,17 +351,32 @@ relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
 		order <- c(ref, order[-ref])
 	}
 
-
 	xcluster <- x$cluster
 	for (k in 1:x$K){
 		x$cluster[xcluster==order[k]] <- k
 	}
-	x$res.best$cluster <- x$cluster
 	x$centers <- x$centers[order, ]
 	rownames(x$centers) <- 1:x$K
-	x$res.best$centers <- x$centers
-	x$res.best$withinss <- x$res.best$withinss[order]
-	x$res.best$size <- x$res.best$size[order]		
+	if (class(x$res.best)=="kmeans"){
+		x$res.best$cluster <- x$cluster
+		x$res.best$centers <- x$centers
+		x$res.best$withinss <- x$res.best$withinss[order]
+		x$res.best$size <- x$res.best$size[order]		
+	} else {
+		x$res.best$mu <- x$res.best$mu[order,]
+		rownames(x$res.best$mu) <- 1:x$K
+		x$res.best$gamma <- x$res.best$gamma[,order]
+		colnames(x$res.best$gamma) <- 1:x$K
+		x$res.best$h <- x$res.best$h[,order]
+		colnames(x$res.best$h) <- 1:x$K
+		x$res.best$mfit$beta <- x$res.best$mfit$beta[,order]
+		colnames(x$res.best$mfit$beta) <- 1:x$K
+		x$res.best$mfit$fitted <- x$res.best$mfit$fitted[,order]
+		colnames(x$res.best$mfit$fitted) <- 1:x$K
+		x$res.best$mfit$res.best$note <- "Cluster have been re-ordered. See re-ordering sequence in 'reorder' object."
+		x$res.best$mfit$res.best$reorder <- c(x$res.best$mfit$res.best$reorder, list(order))
+	}
+
 	return(x)
 }## relevel.predkmeans
 	
