@@ -7,6 +7,6 @@ Description: Description: What the package does (one paragraph).
 Imports: Rcpp (>= 0.11.5), maxLik
 Suggests: e1071, mgcv,
     testthat
-License: GPL (>= 2)
+License: GPLv3
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: true
