@@ -148,8 +148,8 @@ if (!all(colnames(R) %in% colnames(Rstar))) {
 }
 
 	if ("(Intercept)" %in% colnames(Rstar)) {
-		Rstar <- Rstar[,-which(colnames(Rstar)=="(Intercept)")]
-		R <- R[,-which(colnames(R)=="(Intercept)")]
+		Rstar <- Rstar[,-which(colnames(Rstar)=="(Intercept)"), drop=FALSE]
+		R <- R[,-which(colnames(R)=="(Intercept)"), drop=FALSE]
 	}
 
 	svm.model <- do.call(e1071::best.svm, args=c(list(x= Rstar, y=factor(tr.assign, levels=1:K)), svm.control))
