@@ -1,12 +1,16 @@
 Package: predkmeans
 Title: Covariate adaptive clustering
-Version: 0.0.2.9004
+Version: 0.0.3
 Author: Joshua Keller
 Maintainer: Joshua Keller <kellerjp@uw.edu>
-Description: Description: What the package does (one paragraph).
-Imports: Rcpp (>= 0.11.5), maxLik
-Suggests: e1071, mgcv,
-    testthat
-License: GPLv3
+Description: R Package for implementing the predictive k-means method.
+Imports:
+    Rcpp (>= 0.11.5),
+    maxLik,
+    e1071,
+    mgcv
+Suggests:
+License: GPL-3 | file LICENSE
 LinkingTo: Rcpp, RcppArmadillo
 LazyData: true
+RoxygenNote: 5.0.1

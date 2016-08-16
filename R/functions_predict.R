@@ -49,7 +49,7 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##' @param mlogit.control list of control parameters to be passes to \code{mlogit}
 #' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
 #' @author Joshua Keller
-#
+#' @importFrom stats predict model.matrix rnorm
 # Output
 #' @return A list containing some or all of the following elements:
 #'	\item{tr.assign}{Cluster assignments at training locations}

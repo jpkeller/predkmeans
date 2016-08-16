@@ -84,6 +84,7 @@
 ##'		experts and the EM algorithm. \emph{Neural computation 6}(2),
 ##'		 181-214.
 ##
+##' @importFrom stats kmeans model.matrix
 ##' @author Joshua Keller
 ##' @export
 ##'	@return  An object of class \code{predkmeans}, containing the following elements:
@@ -155,14 +156,14 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 		 			all_same <- all(apply(mu, 2, function(x) diff(range(x))<.Machine$double.eps ^ 0.5))
 				}
 			} else if (muStart=="kmeans"){
-				mu <- kmeans(X, centers=K)$centers
+				mu <- stats::kmeans(X, centers=K)$centers
 			}
 			rownames(mu) <- 1:K	
 		} # if (is.mull(mu))
 
 		# Compute initial values for h (Step E-1)
 		h0 <- assignCluster(X, centers=mu)
-		h0 <- model.matrix(~0 + factor(h0, levels=1:K))
+		h0 <- stats::model.matrix(~0 + factor(h0, levels=1:K))
 		#colnames(h0) <- paste0("C", 1:K)
 		colnames(h0) <- 1:K
 				
@@ -330,6 +331,7 @@ print.summary.predkmeans <- function(x, ...){
 ##' @author Joshua Keller
 ##' @export
 ##' @family 'predkmeans methods'
+##' @importFrom stats relevel
 relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
 	if(class(x)!="predkmeans"){
 		stop("x must be of class predkmeans.")

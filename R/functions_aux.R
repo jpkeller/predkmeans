@@ -47,6 +47,7 @@ assignCluster <- function(X, centers){
 ##'		be returned, or the full output from \code{\link{prcomp}}.
 ##
 ##' @export
+##' @importFrom stats prcomp
 ##' @author Joshua Keller
 ##' @seealso \code{\link{createTPRSmodelmatrix}}
 createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
@@ -76,6 +77,7 @@ createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center
 ##' @param TPRSfx Should the TPRS degrees of freedom be fixed. Passed as the \code{fx} argument to \code{s()}.
 ##
 ##' @export
+##' @importFrom stats formula
 ##' @author Joshua Keller
 ##' @seealso \code{\link{createPCAmodelmatrix}}
 createTPRSmodelmatrix <- function(data, df=5, covarnames=NULL, xname="x", yname="y", TPRSfx=TRUE, matrixonly=TRUE){
@@ -102,11 +104,12 @@ if(!requireNamespace("mgcv", quietly=TRUE)){
 
 
 # Function for creating CV groups
+##' @importFrom stats runif
 create_cv_groups <- function(mons, folds=length(mons)){
     nmons <- length(mons)
     folds <- min(folds, nmons)
     cv.groups <- trunc(folds * 1:nmons / (nmons+1)) + 1
-    cv.groups <- cv.groups[order(runif(nmons, 0, 1))]
+    cv.groups <- cv.groups[order(stats::runif(nmons, 0, 1))]
     cv.list <- list()
     for (i in 1:folds)
     {

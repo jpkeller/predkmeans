@@ -230,7 +230,7 @@ print.predkmeansCVest <- function(x, ...){
 	cat("    ", x$K, "Clusters\n")
 	cat("    ", length(x$setup), "CV Groups\n")
 	cat("Model has:\n")
-	if(x$PCA) cat("    ", x$PCAcontrol$npca, "PCA components\n")
+	if(x$PCA) cat("    ", x$PCAcontrol$ncomps, "PCA components\n")
 	if(x$TPRS) cat("    ", x$TPRScontrol$df, "df TPRS\n")
 	invisible(x)
 }##print.predkmeansCVest()

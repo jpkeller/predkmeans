@@ -22,15 +22,15 @@
 ##'		Newton-Raphson method
 ##
 ##' @details The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.  The log-likehood function, along with its gradient and hessian, are implemented as C++ functions (via the \code{RcppArmadillo} package).
-#
-#  Input:
-##'  @param  Y  A matrix of the outcomes, with K columns for 
+
+##  Input:
+##' @param Y  A matrix of the outcomes, with K columns for 
 ##'		the K groups.  Row sums of the matrix should be equal
 ##'		to one, but entries do not have to be 0/1 (but they
 ##'		should be positive). i.e. this is a matrix of hard or
 ##'		soft assignments to K categories. The first column is
 ##'		used as the reference category.
-##' @param  X  matrix of covariates for regression. Should have
+##' @param X  matrix of covariates for regression. Should have
 ##'		the same number of rows (observations) as Y. Coefficients
 ##'		for all parameters in X are computed for K-1 groups. 
 ##'		The coefficients  corresponding to the first column of Y
