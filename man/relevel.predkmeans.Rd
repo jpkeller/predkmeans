@@ -27,7 +27,8 @@ The elements of the \code{order} argument should refer
 Joshua Keller
 }
 \seealso{
-Other 'predkmeans methods': \code{\link{predkmeansCVest}},
-  \code{\link{predkmeans}}, \code{\link{print.predkmeans}}
+Other methods for predkmeans objects: \code{\link{predictML.predkmeans}},
+  \code{\link{print.predkmeans}},
+  \code{\link{summary.predkmeans}}
 }
 

@@ -24,7 +24,7 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##' @description Predicts cluster membership using either multinomial logistic
 #'    regression or SVMs.
 # 
-#' @details Function for predicting cluster membership in clusters identified by k-means or predictive k-means using multinomial logistic regression or support vector machines (SVMs).  For multinomial logitic regression, parameter estimation is handled by \code{mlogit}.  For SVMs, the svm is fit using \code{best.svm} in \code{e1071} package.
+#' @details Function for predicting cluster membership in clusters identified by k-means or predictive k-means using multinomial logistic regression or support vector machines (SVMs).  For multinomial logitic regression, parameter estimation is handled by \code{mlogit}.  For SVMs, the svm is fit using \code{best.svm} from \code{e1071} package.
 ##'
 ##' Because this prediction includes return information about cluster assignment
 ##' and prediction model parameters, this method is deliberately distinct from
@@ -47,16 +47,20 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##' @param verbose integer indicating amount of output to be displayed
 ##' @param nMlogitStarts number of mlogit starts to use in estimation of parameters
 ##' @param mlogit.control list of control parameters to be passes to \code{mlogit}
-#' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
-#' @author Joshua Keller
-#' @importFrom stats predict model.matrix rnorm
+##
 # Output
 #' @return A list containing some or all of the following elements:
 #'	\item{tr.assign}{Cluster assignments at training locations}
 #' 	\item{mlfit}{A subset of the mlogit object returned by the function of that name}
 #' \item{beta}{Estimated model parameters}
 #' \item{test.pred}{Predicted cluster assignments at test locations}
+##
+##
+##' @author Joshua Keller
 ##' @export
+##' @importFrom stats predict model.matrix rnorm
+##' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
+##' @family methods for predkmeans objects
 predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE)){
 
 if (!is.null(object)){
@@ -102,6 +106,7 @@ return(out)
 ##' @param svm.control list of options for \code{best.svm} 
 ##
 ##' @export
+# @importFrom e1017 best.svm
 # Function for predicting cluster membership in clusters
 # identified by k-means or predictive k-means
 # using SVMs

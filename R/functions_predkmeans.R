@@ -21,18 +21,18 @@
 ##' @title Predictive K-means Clustering
 ##
 ##' @description Uses a Mixture-of-experts algorithm to find 
-##' cluster centers that are influenced by prediction covariates
+##' cluster centers that are influenced by prediction covariates.
 ##
 ## Inputs:
 ##' @param X An \code{n} by \code{p} matrix or data frame of data to be clustered.
 ##' @param R Covariates used for clustering. Required unless doing k-means
 ##'		clustering (i.e. \code{sigma2=0} and \code{sigma2fixed=TRUE}).
 ##' @param K Number of clusters
-##' @param mu = starting values for centers. If NULL (default), 
+##' @param mu starting values for cluster centers. If NULL (default), 
 ##'  	then value is chosen according to \code{muStart}.
 ##' @param muStart Character string indicating how initial value
 ##'  	of mu should be selected. Only used if mu=NULL.  Possible
-##' 	values are \code{"random"} (default) or \code{"kmeans"}.
+##' 	values are \code{"random"} or \code{"kmeans"} (default).
 ##' @param sigma2 starting value of sigma2. If set to \code{0} and
 ##'		\code{sigma2fixed=TRUE}, the standard k-means is done
 ##'		instead of predictive k-means.
@@ -62,14 +62,17 @@
 ##'		included in the output.
 ##' @param ... Additional arguments passed to \code{\link{mlogit}}
 ##
-##' @details The algorithm for sovling the mixture of Experts model is 
+##' @details 
+##'		A thorough description of this method is provided in Keller et al. (2017).
+##' 		The algorithm for sovling the mixture of Experts model is 
 ##'		based upon the approach presented by Jordan and Jacobs (1994). 
 ##'
 ##'		If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
 ##'
-##' The first element of the output is \code{res.best}, which contains results from the best-fitting
-##' solution for the normal mixture model.  The elements of the list are:
-##' \describe{
+##
+##'	@return  An object of class \code{predkmeans}, containing the following elements:
+##' \item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem: 
+##'  \describe{
 ##'   \item{mu}{Maximum-likelihood estimate of intercepts from normal mixture model. These are the cluster centers.}
 ##'   \item{gamma}{Maximum-likelihood estimates of the mixture coefficeints.}
 ##'   \item{sigma2}{If \code{sigma2fixed=FALSE}, the maximum likelihood estimate of \code{sigma2}}
@@ -77,9 +80,19 @@
 ##'   \item{objective}{Value of the log-likelihood.}
 ##'   \item{iter}{Number of iterations.}
 ##'   \item{mfit}{A subset of output from \code{\link{mlogit}}.}
-##' }
-##' @family 'predkmeans methods'
-##' @seealso \code{\link{predictML.predkmeans}}
+##' }}
+##' \item{center}{Matrix of cluster centers}
+##' \item{cluster}{Vector of cluster labels assigned to observations}
+##' \item{K}{Number of clusters}
+##'	\item{sigma2}{Final value of sigma^2.}
+##' \item{wSS}{Mean within-cluster sum-of-squares}
+##' \item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
+##list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])
+##
+##
+##
+##' @seealso \code{\link{predictML.predkmeans}, \link{predkmeansCVest}}
+##' @references Keller (2017). 
 ##' @references Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 ##'		experts and the EM algorithm. \emph{Neural computation 6}(2),
 ##'		 181-214.
@@ -87,17 +100,6 @@
 ##' @importFrom stats kmeans model.matrix
 ##' @author Joshua Keller
 ##' @export
-##'	@return  An object of class \code{predkmeans}, containing the following elements:
-##' \item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. See Details.}
-
-##' \item{center}{Matrix of cluster centers}
-##' \item{cluster}{Vector of cluster labels assigned to observations}
-##' \item{K}{Number of clusters}
-##'	\item{sigam2}{Final value of sigma^2.}
-##' \item{wSS}{Mean within-cluster sum-of-squares}
-##' \item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
-##list(mu=mu, gamma=gamma, sigma2=sigma2, conv=converged, objective= obj, iter=iter, mfit=mfit[c("beta", "fitted01", "fitted", "res.best", "status")])
-##
 predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,  sigma2fixed=FALSE,maxitEM=100, tol=1e-5, convEM=c("both", "mu", "gamma"), nStarts=1, maxitMlogit=500,verbose=0, muRestart=1000, returnAll=FALSE, ...) {
 	
 	if(is.null(K)){
@@ -276,7 +278,7 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 ##' @param x object of class \code{predkmeans}
 ##' @param ... Ignored additional arguments.
 ##' @export
-##' @family 'predkmeans methods'
+##' @family methods for predkmeans objects
 print.predkmeans <- function(x, ...){
 	if(class(x)!="predkmeans"){
 		stop("x must be of class predkmeans.")
@@ -294,7 +296,7 @@ print.predkmeans <- function(x, ...){
 ##' @param object object of class \code{predkmeans}
 ##' @param ... Ignored additional arguments.
 ##' @export
-##' @family predkmeans methods
+##' @family methods for predkmeans objects
 summary.predkmeans <- function(object, ...){
 	class(object) <- "summary.predkmeans"
 	object
@@ -330,7 +332,7 @@ print.summary.predkmeans <- function(x, ...){
 ##
 ##' @author Joshua Keller
 ##' @export
-##' @family 'predkmeans methods'
+##' @family methods for predkmeans objects
 ##' @importFrom stats relevel
 relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
 	if(class(x)!="predkmeans"){

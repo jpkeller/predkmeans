@@ -17,12 +17,12 @@ clustering (i.e. \code{sigma2=0} and \code{sigma2fixed=TRUE}).}
 
 \item{K}{Number of clusters}
 
-\item{mu}{= starting values for centers. If NULL (default), 
+\item{mu}{starting values for cluster centers. If NULL (default), 
 then value is chosen according to \code{muStart}.}
 
 \item{muStart}{Character string indicating how initial value
  of mu should be selected. Only used if mu=NULL.  Possible
-values are \code{"random"} (default) or \code{"kmeans"}.}
+values are \code{"random"} or \code{"kmeans"} (default).}
 
 \item{sigma2}{starting value of sigma2. If set to \code{0} and
 \code{sigma2fixed=TRUE}, the standard k-means is done
@@ -65,7 +65,16 @@ included in the output.}
 }
 \value{
 An object of class \code{predkmeans}, containing the following elements:
-\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. See Details.}
+\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. See Details.
+\describe{
+  \item{mu}{Maximum-likelihood estimate of intercepts from normal mixture model. These are the cluster centers.}
+  \item{gamma}{Maximum-likelihood estimates of the mixture coefficeints.}
+  \item{sigma2}{If \code{sigma2fixed=FALSE}, the maximum likelihood estimate of \code{sigma2}}
+  \item{conv}{Indicator of covergence.}
+  \item{objective}{Value of the log-likelihood.}
+  \item{iter}{Number of iterations.}
+  \item{mfit}{A subset of output from \code{\link{mlogit}}.}
+}}
 \item{center}{Matrix of cluster centers}
 \item{cluster}{Vector of cluster labels assigned to observations}
 \item{K}{Number of clusters}
@@ -75,39 +84,26 @@ An object of class \code{predkmeans}, containing the following elements:
 }
 \description{
 Uses a Mixture-of-experts algorithm to find 
-cluster centers that are influenced by prediction covariates
+cluster centers that are influenced by prediction covariates.
 }
 \details{
-The algorithm for sovling the mixture of Experts model is 
+A thorough description of this method is provided in Keller et al. (2017).
+		The algorithm for sovling the mixture of Experts model is 
 	based upon the approach presented by Jordan and Jacobs (1994). 
 
 	If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
-
-The first element of the output is \code{res.best}, which contains results from the best-fitting
-solution for the normal mixture model.  The elements of the list are:
-\describe{
-  \item{mu}{Maximum-likelihood estimate of intercepts from normal mixture model. These are the cluster centers.}
-  \item{gamma}{Maximum-likelihood estimates of the mixture coefficeints.}
-  \item{sigma2}{If \code{sigma2fixed=FALSE}, the maximum likelihood estimate of \code{sigma2}}
-  \item{conv}{Indicator of covergence.}
-  \item{objective}{Value of the log-likelihood.}
-  \item{iter}{Number of iterations.}
-  \item{mfit}{A subset of output from \code{\link{mlogit}}.}
-}
 }
 \author{
 Joshua Keller
 }
 \references{
+Keller (2017).
+
 Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 	experts and the EM algorithm. \emph{Neural computation 6}(2),
 	 181-214.
 }
 \seealso{
-\code{\link{predictML.predkmeans}}
-
-Other 'predkmeans methods': \code{\link{predkmeansCVest}},
-  \code{\link{print.predkmeans}},
-  \code{\link{relevel.predkmeans}}
+\code{\link{predictML.predkmeans}, \link{predkmeansCVest}}
 }
 

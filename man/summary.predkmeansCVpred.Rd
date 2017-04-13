@@ -14,7 +14,4 @@
 \description{
 \code{\link[base:print]{summary}} method for class \code{predkmeansCVpred}.
 }
-\seealso{
-Other predkmeans methods: \code{\link{summary.predkmeans}}
-}
 

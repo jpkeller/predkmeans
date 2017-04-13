@@ -62,9 +62,5 @@ Joshua Keller
 }
 \seealso{
 \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
-
-Other 'predkmeans methods': \code{\link{predkmeans}},
-  \code{\link{print.predkmeans}},
-  \code{\link{relevel.predkmeans}}
 }
 

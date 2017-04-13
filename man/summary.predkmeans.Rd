@@ -15,6 +15,8 @@
 \code{\link[base:print]{summary}} method for class \code{predkmeans}.
 }
 \seealso{
-Other predkmeans methods: \code{\link{summary.predkmeansCVpred}}
+Other methods for predkmeans objects: \code{\link{predictML.predkmeans}},
+  \code{\link{print.predkmeans}},
+  \code{\link{relevel.predkmeans}}
 }
 
