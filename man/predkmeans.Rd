@@ -65,8 +65,8 @@ included in the output.}
 }
 \value{
 An object of class \code{predkmeans}, containing the following elements:
-\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem. See Details.
-\describe{
+\item{res.best}{A list containing the results from the best-fitting solution to the Mixture of Experts problem: 
+ \describe{
   \item{mu}{Maximum-likelihood estimate of intercepts from normal mixture model. These are the cluster centers.}
   \item{gamma}{Maximum-likelihood estimates of the mixture coefficeints.}
   \item{sigma2}{If \code{sigma2fixed=FALSE}, the maximum likelihood estimate of \code{sigma2}}
@@ -78,7 +78,7 @@ An object of class \code{predkmeans}, containing the following elements:
 \item{center}{Matrix of cluster centers}
 \item{cluster}{Vector of cluster labels assigned to observations}
 \item{K}{Number of clusters}
-\item{sigam2}{Final value of sigma^2.}
+\item{sigma2}{Final value of sigma^2.}
 \item{wSS}{Mean within-cluster sum-of-squares}
 \item{sigma2fixed}{Logical indicator of whether sigma2 was held fixed}
 }
@@ -93,9 +93,6 @@ A thorough description of this method is provided in Keller et al. (2017).
 
 	If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
 }
-\author{
-Joshua Keller
-}
 \references{
 Keller (2017).
 
@@ -106,4 +103,6 @@ Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
 \seealso{
 \code{\link{predictML.predkmeans}, \link{predkmeansCVest}}
 }
-
+\author{
+Joshua Keller
+}

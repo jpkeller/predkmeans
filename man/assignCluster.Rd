@@ -20,4 +20,3 @@ Assigns observation to the nearest cluster center, using squared Euclidean dista
 \author{
 Joshua Keller
 }
-

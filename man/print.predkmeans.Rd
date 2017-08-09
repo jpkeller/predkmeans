@@ -19,4 +19,3 @@ Other methods for predkmeans objects: \code{\link{predictML.predkmeans}},
   \code{\link{relevel.predkmeans}},
   \code{\link{summary.predkmeans}}
 }
-

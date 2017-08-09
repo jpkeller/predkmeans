@@ -26,10 +26,9 @@ be returned, or the full output from \code{\link{prcomp}}.}
 Wrapper function for creating PCA components to be used
 	in a regression analysis.
 }
-\author{
-Joshua Keller
-}
 \seealso{
 \code{\link{createTPRSmodelmatrix}}
 }
-
+\author{
+Joshua Keller
+}

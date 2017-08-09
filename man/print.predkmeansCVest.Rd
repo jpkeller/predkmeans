@@ -14,4 +14,3 @@
 \description{
 \code{\link[base:print]{print}} method for class \code{predkmeansCVest}.
 }
-

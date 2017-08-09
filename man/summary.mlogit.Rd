@@ -18,4 +18,3 @@
 Other mlogit methods: \code{\link{mlogit}},
   \code{\link{print.mlogit}}
 }
-

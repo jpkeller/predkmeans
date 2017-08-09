@@ -88,3 +88,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"predkmeans_loglikeCpp", (DL_FUNC) &predkmeans_loglikeCpp, 3},
+    {"predkmeans_gradientMultinomialCpp", (DL_FUNC) &predkmeans_gradientMultinomialCpp, 3},
+    {"predkmeans_hessianMultinomialCpp", (DL_FUNC) &predkmeans_hessianMultinomialCpp, 5},
+    {"predkmeans_getUproxy", (DL_FUNC) &predkmeans_getUproxy, 3},
+    {"predkmeans_getExpMahalRcpp", (DL_FUNC) &predkmeans_getExpMahalRcpp, 3},
+    {"predkmeans_getHRcpp", (DL_FUNC) &predkmeans_getHRcpp, 5},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_predkmeans(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

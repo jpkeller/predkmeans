@@ -69,13 +69,12 @@ Solves a multinomial logistic problem using
 \details{
 The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.  The log-likehood function, along with its gradient and hessian, are implemented as C++ functions (via the \code{RcppArmadillo} package).
 }
-\author{
-Joshua Keller
-}
 \seealso{
 \code{\link{predkmeans}}
 
 Other mlogit methods: \code{\link{print.mlogit}},
   \code{\link{summary.mlogit}}
 }
-
+\author{
+Joshua Keller
+}

@@ -57,10 +57,9 @@ Performs cross-validation of predictive-kmeans on a dataset.
 \details{
 To be added....
 }
-\author{
-Joshua Keller
-}
 \seealso{
 \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
 }
-
+\author{
+Joshua Keller
+}
