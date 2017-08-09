@@ -28,10 +28,9 @@ A list with the following elements:
 \description{
 Computes several measures of performance for cluster label prediction.
 }
-\author{
-Joshua Keller
-}
 \seealso{
 \code{\link{predictML}}
 }
-
+\author{
+Joshua Keller
+}

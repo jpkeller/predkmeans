@@ -21,10 +21,9 @@ predkmeansCVpred(object, X = object$X, R = object$R, method = c("ML",
 \description{
 Performs cross-validation of predictive-kmeans on a dataset.
 }
-\author{
-Joshua Keller
-}
 \seealso{
 \code{\link{predkmeansCVest}}, \code{\link{predictML}}
 }
-
+\author{
+Joshua Keller
+}

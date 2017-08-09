@@ -23,12 +23,11 @@ The elements of the \code{order} argument should refer
 	to the current position of clusters, with the position
 	giving the new order. So 'c(3, 1, 2)' moves 1 to 2, 2 to 3, and 3 to 1.
 }
-\author{
-Joshua Keller
-}
 \seealso{
 Other methods for predkmeans objects: \code{\link{predictML.predkmeans}},
   \code{\link{print.predkmeans}},
   \code{\link{summary.predkmeans}}
 }
-
+\author{
+Joshua Keller
+}

@@ -28,10 +28,9 @@ be returned, or the full output from \code{\link{gam}}.}
 Wrapper function for creating thin-plate regression splines (TPRS)
 	to be used in a regression analysis.
 }
-\author{
-Joshua Keller
-}
 \seealso{
 \code{\link{createPCAmodelmatrix}}
 }
-
+\author{
+Joshua Keller
+}
