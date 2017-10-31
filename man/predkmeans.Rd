@@ -94,9 +94,9 @@ A thorough description of this method is provided in Keller et al. (2017).
 	If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
 }
 \references{
-Keller (2017).
+Keller, J.P., Drton, M., Larson, T., Kaufman, J.D., Sandler, D.P., and Szpiro, A.A. (2017). Covariate-adaptive clustering of exposures for air pollution epidemiology cohorts. \emph{Annals of Applied Statistics}, 11(1):93--113.
 
-Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
+Jordan M. and Jacobs R. (1994). Hierarchical mixtures of
 	experts and the EM algorithm. \emph{Neural computation 6}(2),
 	 181-214.
 }

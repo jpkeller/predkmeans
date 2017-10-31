@@ -92,8 +92,8 @@
 ##
 ##
 ##' @seealso \code{\link{predictML.predkmeans}, \link{predkmeansCVest}}
-##' @references Keller (2017). 
-##' @references Jordan, M. and R. Jacobs (1994). Hierarchical mixtures of
+##' @references Keller, J.P., Drton, M., Larson, T., Kaufman, J.D., Sandler, D.P., and Szpiro, A.A. (2017). Covariate-adaptive clustering of exposures for air pollution epidemiology cohorts. \emph{Annals of Applied Statistics}, 11(1):93--113.
+##' @references Jordan M. and Jacobs R. (1994). Hierarchical mixtures of
 ##'		experts and the EM algorithm. \emph{Neural computation 6}(2),
 ##'		 181-214.
 ##

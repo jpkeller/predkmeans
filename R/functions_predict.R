@@ -58,6 +58,7 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##
 ##' @author Joshua Keller
 ##' @export
+##' @method predictML predkmeans
 ##' @importFrom stats predict model.matrix rnorm
 ##' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
 ##' @family methods for predkmeans objects
@@ -251,5 +252,12 @@ predictionMetrics <- function(centers, cluster.pred, X, labels=TRUE){
 
 
 
+##' @export
+predictML <- function(x,...) UseMethod("predictML")
 
+##' @export
+predictSVM <- function(x,...) UseMethod("predictSVM")
+
+##' @export
+predictMixExp <- function(x,...) UseMethod("predictMixExp")
 

@@ -1,6 +1,6 @@
 Package: predkmeans
 Title: Covariate adaptive clustering
-Version: 0.0.3.2
+Version: 0.0.3.3
 Author: Joshua Keller
 Maintainer: Joshua Keller <jkelle46@jhu.edu>
 Description: R Package for implementing the predictive k-means method.
