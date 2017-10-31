@@ -47,6 +47,7 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##' @param verbose integer indicating amount of output to be displayed
 ##' @param nMlogitStarts number of mlogit starts to use in estimation of parameters
 ##' @param mlogit.control list of control parameters to be passes to \code{mlogit}
+##' @param ... Unused additional arguments
 ##
 # Output
 #' @return A list containing some or all of the following elements:
@@ -62,7 +63,7 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##' @importFrom stats predict model.matrix rnorm
 ##' @seealso \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
 ##' @family methods for predkmeans objects
-predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE)){
+predictML.predkmeans <- function(object=NULL, centers=object$centers, K=nrow(centers), R,  Rstar, Xstar=NULL, tr.assign=object$cluster, muStart ="random", maxitMlogit =500, verbose=1, nMlogitStarts=1,  mlogit.control=list(suppressFittedWarning=TRUE),...){
 
 if (!is.null(object)){
 	if(!inherits(object, c("predkmeans"))){
@@ -122,7 +123,7 @@ return(out)
 #   tr.assign -- Assignments of training data
 #   
 predictSVM.predkmeans <- function(object=NULL,
-centers=object$centers, R,  Rstar, K=nrow(centers), Xstar=NULL, tr.assign =object$cluster,  svm.control=list(gamma=c(1/(2:1), 2), cost=seq(20, 100, by=20))){
+centers=object$centers, R,  Rstar, K=nrow(centers), Xstar=NULL, tr.assign =object$cluster,  svm.control=list(gamma=c(1/(2:1), 2), cost=seq(20, 100, by=20)), ...){
 
 if(!requireNamespace("e1071", quietly=TRUE)){
 	stop("e1071 is required for SVM prediction.  Please install it.", call.=FALSE)
@@ -184,7 +185,7 @@ return(out)
 #	R -- matrix of covariates for observations to be predicted at.  
 #	Rstar -- Not used; included as formal argument for programming convenience.
 #   
-predictMixExp.predkmeans <- function(object, R, Rstar=NULL){
+predictMixExp.predkmeans <- function(object, R, Rstar=NULL, ...){
 
 if (!is.null(object)){
 	if(!inherits(object, c("predkmeans"))){
@@ -253,11 +254,11 @@ predictionMetrics <- function(centers, cluster.pred, X, labels=TRUE){
 
 
 ##' @export
-predictML <- function(x,...) UseMethod("predictML")
+predictML <- function(object,...) UseMethod("predictML")
 
 ##' @export
-predictSVM <- function(x,...) UseMethod("predictSVM")
+predictSVM <- function(object,...) UseMethod("predictSVM")
 
 ##' @export
-predictMixExp <- function(x,...) UseMethod("predictMixExp")
+predictMixExp <- function(object,...) UseMethod("predictMixExp")
 

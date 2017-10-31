@@ -12,13 +12,14 @@
 \method{predictML}{predkmeans}(object = NULL, centers = object$centers,
   K = nrow(centers), R, Rstar, Xstar = NULL, tr.assign = object$cluster,
   muStart = "random", maxitMlogit = 500, verbose = 1, nMlogitStarts = 1,
-  mlogit.control = list(suppressFittedWarning = TRUE))
+  mlogit.control = list(suppressFittedWarning = TRUE), ...)
 
 \method{predictSVM}{predkmeans}(object = NULL, centers = object$centers, R,
   Rstar, K = nrow(centers), Xstar = NULL, tr.assign = object$cluster,
-  svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)))
+  svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)),
+  ...)
 
-\method{predictMixExp}{predkmeans}(object, R, Rstar = NULL)
+\method{predictMixExp}{predkmeans}(object, R, Rstar = NULL, ...)
 }
 \arguments{
 \item{object}{A predkmeans object, from which the cluster centers will be extracted.}
@@ -44,6 +45,8 @@
 \item{nMlogitStarts}{number of mlogit starts to use in estimation of parameters}
 
 \item{mlogit.control}{list of control parameters to be passes to \code{mlogit}}
+
+\item{...}{Unused additional arguments}
 
 \item{svm.control}{list of options for \code{best.svm}}
 }

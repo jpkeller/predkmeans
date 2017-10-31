@@ -93,6 +93,22 @@ A thorough description of this method is provided in Keller et al. (2017).
 
 	If \code{sigma2} is 0 and \code{sigm2fixed} is TRUE, then standard k-means clustering (using \code{\link{kmeans}}) is done instead.
 }
+\examples{
+n <- 200
+r1 <- rnorm(n)
+r2 <- rnorm(n)
+u1 <- rbinom(n, size=1,prob=0)
+cluster <- ifelse(r1<0, ifelse(u1, "A", "B"), ifelse(r2<0, "C", "D"))
+mu1 <- c(A=2, B=2, C=-2, D=-2)
+mu2 <- c(A=1, B=-1, C=-1, D=-1)
+x1 <- rnorm(n, mu1[cluster], 4)
+x2 <- rnorm(n, mu2[cluster], 4)
+plot(x1, x2)
+R <- model.matrix(~r1 + r2)
+X <- cbind(x1, x2)
+pkm <- predkmeans(X=cbind(x1, x2), R=R, K=4)
+summary(pkm)
+}
 \references{
 Keller, J.P., Drton, M., Larson, T., Kaufman, J.D., Sandler, D.P., and Szpiro, A.A. (2017). Covariate-adaptive clustering of exposures for air pollution epidemiology cohorts. \emph{Annals of Applied Statistics}, 11(1):93--113.
 
