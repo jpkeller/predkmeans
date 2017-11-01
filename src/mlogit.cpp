@@ -3,7 +3,7 @@
 //  
 //
 //  Created by Joshua Keller on 3/26/15.
-//
+//  Last Modified 11/1/17
 //
 
 #include <stdio.h>
@@ -16,24 +16,6 @@
 using namespace Rcpp;
 
 
-/* Original Version
-// [[Rcpp::export]]
-double loglikeCpp(arma::mat X, arma::mat b, arma::mat y)
-{
-    arma::mat eXb;
-    arma::colvec d;
-
-    X *= b;
-    eXb=exp(X);
-    double res;
-    d = log(1+ sum(eXb,1));
-    y %= X;
-    res = accu(y) - accu(d);
-    return res;
-} */
-
-
-
 // [[Rcpp::export]]
 double loglikeCpp(arma::mat X, arma::mat b, arma::mat y, int n)
 {
@@ -44,12 +26,16 @@ double loglikeCpp(arma::mat X, arma::mat b, arma::mat y, int n)
     double res;
     arma::mat zerovec = arma::zeros<arma::mat>(n, 1);
     
+    
     eta = X*b;
+    
+    // More stable version of:
+    // denom = log(1+ sum(exp(eta),1));
     denomMX = join_rows(zerovec, eta);
     denomMXmax = max(denomMX, 1);
-
     denomMX = denomMX.each_col() - denomMXmax;
     denom = denomMXmax + log(sum(exp(denomMX), 1));
+    
     y %= eta;
     res = accu(y) - accu(denom);
     return res;
@@ -63,14 +49,10 @@ arma::mat gradientMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int k)
     arma::mat prob;
     arma::mat res;
     
-    /*
-    eta = exp(X*b);
-    prob = 1+ sum(eta, 1);
-    eta.each_col() /=prob;
-    eta = y - eta;
-    res=X.t()*eta;
-     */
-    
+    // More stable version of
+    // eta = exp(X*b);
+    // prob = 1+ sum(eta, 1);
+    // eta.each_col() /=prob;
     eta = X*b;
     prob = eta; //overwrite this later
     for (int j=0; j<(k-1); j++){
@@ -87,8 +69,6 @@ arma::mat gradientMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int k)
 // [[Rcpp::export]]
 arma::mat hessianMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int p, int k)
 {
-    //arma::mat probA;
-    //arma::mat prob;
     arma::mat eta;
     arma::mat etaTemp;
     arma::mat prob;
@@ -97,7 +77,6 @@ arma::mat hessianMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int p, in
     arma::mat Hn(p, p);
     arma::mat Xtemp;
 
-    
     /*
     prob = exp(X*b);
     probA = 1+ sum(prob, 1);
@@ -128,62 +107,3 @@ arma::mat hessianMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int p, in
     }
     return H;
 }
-
-
-
-
-// [[Rcpp::export]]
-arma::mat getUproxy(arma::mat X, arma::mat b, arma::mat y)
-{
-    arma::mat eta;
-    arma::mat prob;
-    arma::mat res;
-    
-    eta = exp(X*b);
-    prob = 1+ sum(eta, 1);
-    eta.each_col() /=prob;
-    eta = y - eta;
-    res=X.t()*eta;
-    return res;
-}
-
-
-// For each row Xi of X, this computes
-//      exp(-1/(2*sigma2) * (Xi - mu)^T(Xi - mu))
-//
-// [[Rcpp::depends("RcppArmadillo")]]
-// [[Rcpp::export]]
-arma::vec getExpMahalRcpp(arma::mat x, arma::rowvec center, double sigma2) {
-    arma::vec out;
-    x.each_row() -= center;
-    out=sum(x % x,1);
-    out=exp(-0.5/sigma2*out);
-    return out;
-}
-
-
-
-// For each row Xi of X, this computes
-//      exp(-1/(2*sigma2) * (Xi - mu)^T(Xi - mu))
-//
-// [[Rcpp::depends("RcppArmadillo")]]
-// [[Rcpp::export]]
-arma::mat getHRcpp(arma::mat x, arma::mat R, arma::mat gamma, arma::mat mu, double sigma2) {
-    arma::mat Rg;
-    arma::colvec workingsum;
-    int K=mu.n_rows;
-    int n=x.n_rows;
-    arma::mat out(n, K);
-
-    for (int k=0; k<K; k++){
-        out.col(k)= getExpMahalRcpp(x, mu.row(k), sigma2);
-    }
-    Rg = exp(R*gamma);
-    workingsum = sum(Rg, 1);
-    Rg.each_col() /=workingsum;
-    out=out%Rg;
-    workingsum=sum(out, 1);
-    out.each_col()/=workingsum;
-    return out;
-}
-

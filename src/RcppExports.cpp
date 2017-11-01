@@ -49,55 +49,11 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// getUproxy
-arma::mat getUproxy(arma::mat X, arma::mat b, arma::mat y);
-RcppExport SEXP predkmeans_getUproxy(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type b(bSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(getUproxy(X, b, y));
-    return rcpp_result_gen;
-END_RCPP
-}
-// getExpMahalRcpp
-arma::vec getExpMahalRcpp(arma::mat x, arma::rowvec center, double sigma2);
-RcppExport SEXP predkmeans_getExpMahalRcpp(SEXP xSEXP, SEXP centerSEXP, SEXP sigma2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::rowvec >::type center(centerSEXP);
-    Rcpp::traits::input_parameter< double >::type sigma2(sigma2SEXP);
-    rcpp_result_gen = Rcpp::wrap(getExpMahalRcpp(x, center, sigma2));
-    return rcpp_result_gen;
-END_RCPP
-}
-// getHRcpp
-arma::mat getHRcpp(arma::mat x, arma::mat R, arma::mat gamma, arma::mat mu, double sigma2);
-RcppExport SEXP predkmeans_getHRcpp(SEXP xSEXP, SEXP RSEXP, SEXP gammaSEXP, SEXP muSEXP, SEXP sigma2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type x(xSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type R(RSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type gamma(gammaSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type mu(muSEXP);
-    Rcpp::traits::input_parameter< double >::type sigma2(sigma2SEXP);
-    rcpp_result_gen = Rcpp::wrap(getHRcpp(x, R, gamma, mu, sigma2));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"predkmeans_loglikeCpp", (DL_FUNC) &predkmeans_loglikeCpp, 4},
     {"predkmeans_gradientMultinomialCpp", (DL_FUNC) &predkmeans_gradientMultinomialCpp, 4},
     {"predkmeans_hessianMultinomialCpp", (DL_FUNC) &predkmeans_hessianMultinomialCpp, 5},
-    {"predkmeans_getUproxy", (DL_FUNC) &predkmeans_getUproxy, 3},
-    {"predkmeans_getExpMahalRcpp", (DL_FUNC) &predkmeans_getExpMahalRcpp, 3},
-    {"predkmeans_getHRcpp", (DL_FUNC) &predkmeans_getHRcpp, 5},
     {NULL, NULL, 0}
 };
 

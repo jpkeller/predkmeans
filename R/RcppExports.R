@@ -13,15 +13,3 @@ hessianMultinomialCpp <- function(X, b, y, p, k) {
     .Call('predkmeans_hessianMultinomialCpp', PACKAGE = 'predkmeans', X, b, y, p, k)
 }
 
-getUproxy <- function(X, b, y) {
-    .Call('predkmeans_getUproxy', PACKAGE = 'predkmeans', X, b, y)
-}
-
-getExpMahalRcpp <- function(x, center, sigma2) {
-    .Call('predkmeans_getExpMahalRcpp', PACKAGE = 'predkmeans', x, center, sigma2)
-}
-
-getHRcpp <- function(x, R, gamma, mu, sigma2) {
-    .Call('predkmeans_getHRcpp', PACKAGE = 'predkmeans', x, R, gamma, mu, sigma2)
-}
-
