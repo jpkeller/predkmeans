@@ -7,28 +7,30 @@
 using namespace Rcpp;
 
 // loglikeCpp
-double loglikeCpp(arma::mat X, arma::mat b, arma::mat y);
-RcppExport SEXP predkmeans_loglikeCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP) {
+double loglikeCpp(arma::mat X, arma::mat b, arma::mat y, int n);
+RcppExport SEXP predkmeans_loglikeCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type b(bSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(loglikeCpp(X, b, y));
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(loglikeCpp(X, b, y, n));
     return rcpp_result_gen;
 END_RCPP
 }
 // gradientMultinomialCpp
-arma::mat gradientMultinomialCpp(arma::mat X, arma::mat b, arma::mat y);
-RcppExport SEXP predkmeans_gradientMultinomialCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP) {
+arma::mat gradientMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int k);
+RcppExport SEXP predkmeans_gradientMultinomialCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type b(bSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(gradientMultinomialCpp(X, b, y));
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(gradientMultinomialCpp(X, b, y, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -90,8 +92,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"predkmeans_loglikeCpp", (DL_FUNC) &predkmeans_loglikeCpp, 3},
-    {"predkmeans_gradientMultinomialCpp", (DL_FUNC) &predkmeans_gradientMultinomialCpp, 3},
+    {"predkmeans_loglikeCpp", (DL_FUNC) &predkmeans_loglikeCpp, 4},
+    {"predkmeans_gradientMultinomialCpp", (DL_FUNC) &predkmeans_gradientMultinomialCpp, 4},
     {"predkmeans_hessianMultinomialCpp", (DL_FUNC) &predkmeans_hessianMultinomialCpp, 5},
     {"predkmeans_getUproxy", (DL_FUNC) &predkmeans_getUproxy, 3},
     {"predkmeans_getExpMahalRcpp", (DL_FUNC) &predkmeans_getExpMahalRcpp, 3},

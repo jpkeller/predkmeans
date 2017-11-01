@@ -131,7 +131,7 @@ mlogit <- function(Y, X, beta=NULL, add.intercept=FALSE, betaOnly=FALSE, tol.zer
 	
 		res[[i]] <- maxLik::maxNR(fn=function(beta) logLikeMultinomial_Rcpp(beta, Y, X, K, p), grad=function(beta) gradientMultinomial_Rcpp(beta, Y, X, K, p), hess=function(beta) hessianMultinomial_Rcpp(beta, Y, X, K, p),  start= beta.start, print.level= maxNR.print.level, iterlim= iterlim)
 		# } else {
-			# res[[i]] <- maxNR(fn=function(beta) logLikeMultinomial(beta, Y, X), grad=function(beta) gradientMultinomial(beta, Y, X), hess=function(beta) hessianMultinomial(beta, Y, X),  start= beta.start, print.level= maxNR.print.level, iterlim= iterlim)
+		# res[[i]] <- maxLik::maxNR(fn=function(beta) logLikeMultinomial(beta, Y, X), grad=function(beta) gradientMultinomial(beta, Y, X), hess=function(beta) hessianMultinomial(beta, Y, X),  start= beta.start, print.level= maxNR.print.level, iterlim= iterlim)
 
 		# }
 		hessianND <- FALSE
@@ -228,7 +228,9 @@ logLikeMultinomial <- function(beta, Y, X){
 	K <- ncol(Y)
 	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
-	LL <- sum(rowSums(Y[,-1] * (X %*% beta)) - log(1 + rowSums(exp(X%*% beta))))
+	Xbeta <- cbind(0, X %*% beta)
+	XbetaMax <- apply(Xbeta, 1, max)
+	LL <- sum(rowSums(Y * Xbeta) - (XbetaMax + log(rowSums(exp(Xbeta - XbetaMax)))))
 	LL
 }
 
@@ -279,8 +281,10 @@ logLikeMultinomial_Rcpp <- function(beta, Y, X, K=ncol(Y), p=ncol(X)){
 #	K <- ncol(Y)
 #	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
+
 #	LL <- sum(rowSums(Y[,-1] * (X %*% beta)) - log(1 + rowSums(exp(X%*% beta))))
-	LL <- loglikeCpp(X, beta, Y[,-1, drop=FALSE])
+#	LL <- loglikeCpp(X, beta, Y[,-1, drop=FALSE])
+	LL <- loglikeCpp(X, beta, Y[, -1, drop=FALSE], n=as.integer(nrow(Y)))
 	LL
 }
 
@@ -295,8 +299,7 @@ gradientMultinomial_Rcpp <- function(beta, Y, X, K=ncol(Y), p=ncol(X)){
 #	prob <- eta/(1 + rowSums(eta))
 ##	logeta <- X %*% beta
 ##	prob <- apply(logeta, 2, function(x) 1/(exp(-x) + rowSums(exp(logeta-x))))
-	g <- as.vector(gradientMultinomialCpp(X=X, b=beta, y=Y[,-1, drop=FALSE]))
-
+	g <- as.vector(gradientMultinomialCpp(X=X, b=beta, y=Y[,-1, drop=FALSE], k=K))
 	g
 }
 
@@ -307,7 +310,9 @@ hessianMultinomial_Rcpp <- function(beta, Y, X, K=ncol(Y), p=ncol(X)){
 #	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
 
-	H <- hessianMultinomialCpp(X=X, b=beta, y=Y[,-1, drop=FALSE], p=p,k=K)
+	# H <- hessianMultinomialCpp(X=X, b=beta, y=Y[,-1, drop=FALSE], p=p,k=K)
+	H <- hessianMultinomialCpp(X=X, b=beta, y=Y, p=p,k=K)
+
 	-H
 }
 	
