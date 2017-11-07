@@ -51,6 +51,20 @@
 ##
 ##' @author Joshua Keller
 ##' @export
+##' @examples 
+#' n <- 200
+#' r1 <- rnorm(n)
+##' r2 <- rnorm(n)
+##' u1 <- rbinom(n, size=1,prob=0)
+##' cluster <- ifelse(r1<0, ifelse(u1, "A", "B"), ifelse(r2<0, "C", "D"))
+##' mu1 <- c(A=2, B=2, C=-2, D=-2)
+##' mu2 <- c(A=1, B=-1, C=-1, D=-1)
+##' x1 <- rnorm(n, mu1[cluster], 4)
+##' x2 <- rnorm(n, mu2[cluster], 4)
+##' R <- model.matrix(~r1 + r2)
+##' X <- cbind(x1, x2)
+##' pkmcv <- predkmeansCVest(X=cbind(x1, x2), R=R, K=4, nStarts=4, cv.groups= 5, TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
+##' pkmcv
 predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=TRUE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
 	
 	R <- as.data.frame(R)
@@ -72,9 +86,6 @@ predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE,
 		PCAcontrol[[i]] <- 	PCAcontrol.default[[i]]
 	}
 		
-# Checks for cv.groups.
-# List, matrix, numeric.	
-# Assume list for now.	
 if (is.numeric(cv.groups) && length(cv.groups)==1){
 	cv.groups  <- createCVgroups(x=X[, 1], k= cv.groups, useNames=TRUE)
 } else if (!is.list(cv.groups)){
