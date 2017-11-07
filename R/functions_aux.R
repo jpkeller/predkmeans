@@ -101,19 +101,3 @@ if(!requireNamespace("mgcv", quietly=TRUE)){
 		return(list(X=X, gamfit=gamfit))
 	}
 }
-
-
-# Function for creating CV groups
-##' @importFrom stats runif
-create_cv_groups <- function(mons, folds=length(mons)){
-    nmons <- length(mons)
-    folds <- min(folds, nmons)
-    cv.groups <- trunc(folds * 1:nmons / (nmons+1)) + 1
-    cv.groups <- cv.groups[order(stats::runif(nmons, 0, 1))]
-    cv.list <- list()
-    for (i in 1:folds)
-    {
-        cv.list[[i]] <- mons[cv.groups==i]
-    }
-    return(cv.list)
-}
