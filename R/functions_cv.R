@@ -78,7 +78,7 @@ predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE,
 # List, matrix, numeric.	
 # Assume list for now.	
 if (is.numeric(cv.groups) && length(cv.groups)==1){
-	cv.groups  <- create_cv_groups(x=X, k= cv.groups, useNames=TRUE)
+	cv.groups  <- createCVgroups(x=X, k= cv.groups, useNames=TRUE)
 } else if (!is.list(cv.groups)){
 	stop("cv.groups must be positive integer or list. Other formats not yet implemented")
 }
@@ -279,10 +279,8 @@ print.summary.predkmeansCVpred <- function(x, ...){
 
 
 
-
-
 ## Helper function for creating CV groups
-#' @name create_cv_groups
+#' @name createCVgroups
 #' @title Creating k-fold Cross-Validation Groups
 #' @description Splits a vector of observation names or indices into a list of k groups, to be used as cross-validation (CV) test groups.
 #' @param x vector of observation ID's (character or numeric) to split into cv groups.
@@ -293,7 +291,15 @@ print.summary.predkmeansCVpred <- function(x, ...){
 #' @export
 #' @author Joshua Keller
 #' @seealso predkmeansCVest predkmeansCVpred
-create_cv_groups <- function(x=NULL, n=length(x), k=10, useNames=TRUE){
+#' @examples
+#' # 5-fold groups
+#' cv5 <- createCVgroups(n=100, k=5)
+#' cv5
+#' 
+#' # Leave-one-out
+#' cvLOO <- createCVgroups(n=100, k=0)
+#' cvLOO
+createCVgroups <- function(x=NULL, n=length(x), k=10, useNames=TRUE){
 	if (is.null(x)){
 		x <- 1:n
 	}
