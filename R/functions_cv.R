@@ -51,8 +51,6 @@
 ##
 ##' @author Joshua Keller
 ##' @export
-##' @examples
-
 predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=TRUE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
 	
 	R <- as.data.frame(R)
@@ -78,15 +76,15 @@ predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE,
 # List, matrix, numeric.	
 # Assume list for now.	
 if (is.numeric(cv.groups) && length(cv.groups)==1){
-	cv.groups  <- createCVgroups(x=X, k= cv.groups, useNames=TRUE)
+	cv.groups  <- createCVgroups(x=X[, 1], k= cv.groups, useNames=TRUE)
 } else if (!is.list(cv.groups)){
 	stop("cv.groups must be positive integer or list. Other formats not yet implemented")
 }
 
-ids <- rownames(X)
-if (is.null(ids)){
-	ids <- 1:nrow(X)
+if (is.null(rownames(X))){
+	rownames(X) <- 1:nrow(X)
 }
+ids <- rownames(X)
 
 
 setup <- vector("list", length(cv.groups))
@@ -139,7 +137,7 @@ for (i in 1:length(cv.groups)){
 	setup[[i]] <- list(training.set=training.set, test.set=test.set, scale.center=scale.center, scale.scale=scale.scale)
 }
 		
-out <- list(call=fncall, pkm=pkm, setup=setup, PCA=PCA, PCAcontrol=PCAcontrol, TPRS=TPRS, TPRScontrol=TPRScontrol, covarnames=covarnames, X=X, R=R, K=K)
+out <- list(call=fncall, pkm=pkm, setup=setup, PCA=PCA, PCAcontrol=PCAcontrol, TPRS=TPRS, TPRScontrol=TPRScontrol, covarnames=covarnames, X=X, R=R, K=K, cvGroups=cv.groups)
 class(out) <- "predkmeansCVest"
 return(out)
 }	
