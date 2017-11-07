@@ -74,17 +74,21 @@
 ##'  \item{res.best}{ the best result from the maxNR fit}
 ##' 	\item{status}{ small data frame summarizing the status of the fits}
 ##'   \item{res. all}{ a list containing the results from all maxNR fits}
-#
-#		Author: J. Keller
-#		Original Date: February 2014
-#		Last modified: June 2015
-# 
-#	Internal Changelog:
-#		16 June 2015 -- Merged the Rccp version of this function
-#						into this file, to streamline code for making into
-#						a package.
-#		15 July 2015 -- Changin the beta to have a column of zeros
-#						and give class information. Added colnames to Y
+##'
+##' @examples
+##' n <- 2000
+##' X <- cbind(1,
+##' 		matrix(rnorm(2*n), nrow=n, ncol=2),
+##' 		rbinom(n, size=1, prob=0.3))
+##' beta <- cbind(rep(0, 4),
+##' 			  c(0.5, 1, 0, -1),
+##' 			  c(0, 2, 2, 0))
+##' probs <- exp(X %*% beta)
+##' probs <- probs/rowSums(probs)
+##' Y <- t(apply(probs, 1, function(p) rmultinom(1, 1, p)))
+##' mfit <- mlogit(Y=Y, X=X, betaOnly=TRUE)
+##' mfit
+##
 mlogit <- function(Y, X, beta=NULL, add.intercept=FALSE, betaOnly=FALSE, tol.zero=1e-8, verbose=T, suppressFittedWarning=FALSE, maxNR.print.level=0, iterlim=150, checkY=TRUE){
 	
 	X <- as.matrix(X)
