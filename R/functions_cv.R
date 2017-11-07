@@ -20,11 +20,11 @@
 ##' @param X Outcome data
 ##' @param R Covariates. Coerced to data frame.
 ##' @param K Number of clusters
-##' @param cv.groups A list or matrix providing the cross-validation
-##'		groups for splitting the data.  Alternatively, a single
-##'		number giving the number of groups into which the
-##'		data are randomly split. A value of '0' implies leave-one-out.
-##'		Defaults to 10.
+##' @param cv.groups A list providing the cross-validation
+##'		groups for splitting the data. groups for splitting the data.
+##'		 Alternatively, a single number giving the number of groups into
+##'  which the data are randomly split. A value of '0' implies leave-one-out.
+##'  Defaults to 10.
 ##'	@param scale Should the outcomes be re-scaled within each training
 ##'		group?
 ##'	@param covarnames Names of covariates to be included directly.
@@ -51,10 +51,8 @@
 ##
 ##' @author Joshua Keller
 ##' @export
-#
-#		Author: J. Keller
-#		Original Date: October 2015
-#
+##' @examples
+
 predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=TRUE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
 	
 	R <- as.data.frame(R)
@@ -79,11 +77,17 @@ predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE,
 # Checks for cv.groups.
 # List, matrix, numeric.	
 # Assume list for now.	
-if (!is.list(cv.groups)){
-	stop("cv.groups must be list. Other formats not yet implemented")
+if (is.numeric(cv.groups) && length(cv.groups)==1){
+	cv.groups  <- create_cv_groups(x=X, k= cv.groups, useNames=TRUE)
+} else if (!is.list(cv.groups)){
+	stop("cv.groups must be positive integer or list. Other formats not yet implemented")
 }
 
 ids <- rownames(X)
+if (is.null(ids)){
+	ids <- 1:nrow(X)
+}
+
 
 setup <- vector("list", length(cv.groups))
 pkm <- vector("list", length(cv.groups))
@@ -274,3 +278,38 @@ print.summary.predkmeansCVpred <- function(x, ...){
 }
 
 
+
+
+
+## Helper function for creating CV groups
+#' @name create_cv_groups
+#' @title Creating k-fold Cross-Validation Groups
+#' @description Splits a vector of observation names or indices into a list of k groups, to be used as cross-validation (CV) test groups.
+#' @param x vector of observation ID's (character or numeric) to split into cv groups.
+#' @param n number of observations to split into cv groups. Defaults to the length of \code{x}, but can also be provided instead of \code{x}.
+#' @param k number of cross-validation groups. Must be less than or equal to \code{n}.
+#' @param useNames logical indicator of whether the names of 'x' should be used to identify observations within cv groups.
+#' @return A list of length \code{k} giving the IDs of observations within each test group.
+#' @export
+#' @author Joshua Keller
+#' @seealso predkmeansCVest predkmeansCVpred
+create_cv_groups <- function(x=NULL, n=length(x), k=10, useNames=TRUE){
+	if (is.null(x)){
+		x <- 1:n
+	}
+	if (length(x)!=n) {
+		stop("'x' must have length 'n'.")
+	}
+	if (k==0){
+		k <- n
+	}
+	if (!is.numeric(k) || k<0 || k>n){
+		stop("Invalid values of 'k'. Must be between 0 (for leave-one-out CV) and 'n'.")
+	}
+	if (useNames && is.null(names(x))) {
+		names(cv.groups) <- names(x)
+	}
+	dummyorder <- sample(1:n, size=n)
+	cv.groups <- split(dummyorder, f=ceiling(seq_along(dummyorder)/(n/k)))
+	cv.groups
+}

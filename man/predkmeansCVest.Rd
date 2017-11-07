@@ -17,10 +17,10 @@ predkmeansCVest(X, R, K, cv.groups = 10, sigma2 = 0, sigma2fixed = FALSE,
 
 \item{K}{Number of clusters}
 
-\item{cv.groups}{A list or matrix providing the cross-validation
-groups for splitting the data.  Alternatively, a single
-number giving the number of groups into which the
-data are randomly split. A value of '0' implies leave-one-out.
+\item{cv.groups}{A list providing the cross-validation
+   groups for splitting the data. groups for splitting the data.
+    Alternatively, a single number giving the number of groups into
+which the data are randomly split. A value of '0' implies leave-one-out.
 Defaults to 10.}
 
 \item{sigma2}{starting value of sigma2. Note: If sigma2=0 and 
