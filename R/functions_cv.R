@@ -8,6 +8,7 @@
 ##	predkmeansCVpred()
 ##  print.predkmeansCVest()
 ##  print.predkmeansCVpred()
+##  createCVgroups()
 
 ##
 ##' @name predkmeansCVest
