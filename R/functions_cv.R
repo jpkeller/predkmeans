@@ -234,6 +234,8 @@ print.predkmeansCVest <- function(x, ...){
 	cat("Model has:\n")
 	if(x$PCA) cat("    ", x$PCAcontrol$ncomps, "PCA components\n")
 	if(x$TPRS) cat("    ", x$TPRScontrol$df, "df TPRS\n")
+	if(!is.null(x$covarnames)) cat("    ", length(x$covarnames), "Covariates\n")
+
 	invisible(x)
 }##print.predkmeansCVest()
 
