@@ -47,7 +47,7 @@
 ##' @details These wrappers are designed to simplify cross-validation of a dataset. For models including thin-plate regression splines (TPRS) or principal component analysis (PCA) scores, these functions will re-evaluate the TPRS basis or PCA decomposition on each training set.
 ##
 ##' @family 'predkmeans methods'
-##' @seealso \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
+##' @seealso \code{\link{predkmeans}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
 ##
 ##' @author Joshua Keller
 ##' @export

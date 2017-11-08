@@ -24,7 +24,7 @@ predictMixExp <- function(x) UseMethod("predictSVM")
 ##' @description Predicts cluster membership using either multinomial logistic
 #'    regression or SVMs.
 # 
-#' @details Function for predicting cluster membership in clusters identified by k-means or predictive k-means using multinomial logistic regression or support vector machines (SVMs).  For multinomial logitic regression, parameter estimation is handled by \code{mlogit}.  For SVMs, the svm is fit using \code{best.svm} from \code{e1071} package.
+#' @details Function for predicting cluster membership in clusters identified by k-means or predictive k-means using multinomial logistic regression or support vector machines (SVMs).  For multinomial logitic regression, parameter estimation is handled by \code{mlogit}.  The SVMs are fit using \code{best.svm} from \code{e1071} package.
 ##'
 ##' Because this prediction includes return information about cluster assignment
 ##' and prediction model parameters, this method is deliberately distinct from

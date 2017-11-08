@@ -80,7 +80,7 @@ pkmcv <- predkmeansCVest(X=cbind(x1, x2), R=R, K=4, nStarts=4, cv.groups= 5, TPR
 pkmcv
 }
 \seealso{
-\code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
+\code{\link{predkmeans}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
 }
 \author{
 Joshua Keller
