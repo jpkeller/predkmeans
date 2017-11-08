@@ -2,13 +2,17 @@
 % Please edit documentation in R/functions_cv.R
 \name{predkmeansCVest}
 \alias{predkmeansCVest}
+\alias{predkmeansCVpred}
 \title{Cross-validation of Predictive K-means Clustering}
 \usage{
 predkmeansCVest(X, R, K, cv.groups = 10, sigma2 = 0, sigma2fixed = FALSE,
-  scale = TRUE, covarnames = NULL, PCA = FALSE,
-  PCAcontrol = list(covarnames = colnames(R), ncomps = 5), TPRS = TRUE,
+  scale = TRUE, covarnames = colnames(R), PCA = FALSE,
+  PCAcontrol = list(covarnames = colnames(R), ncomps = 5), TPRS = FALSE,
   TPRScontrol = list(df = 5, xname = "x", yname = "y"), returnAll = FALSE,
   ...)
+
+predkmeansCVpred(object, X = object$X, R = object$R, method = c("ML",
+  "MixExp", "SVM"), ...)
 }
 \arguments{
 \item{X}{Outcome data}
@@ -49,13 +53,17 @@ splines should be created and added to covariates.}
 \item{returnAll}{A list containing all \code{nStarts} solutions is
 included in the output.}
 
-\item{...}{Additional arguments passed to \code{\link{predkmeans}}}
+\item{...}{Additional arguments passed to either \code{\link{predkmeans}} or the prediction method.}
+
+\item{object}{A \code{predkmeansCVest} object. See \code{\link{predkmeansCVest}}.}
+
+\item{method}{Character string indicating which prediciton method should be used. Optins are \code{ML}, \code{MixExp}, and \code{SVM}. See \code{\link{predictML}} for more information.}
 }
 \description{
-Performs cross-validation of predictive-kmeans on a dataset.
+Performs cross-validation of predictive k-means clustering and cluster prediction.
 }
 \details{
-To be added....
+These wrappers are designed to simplify cross-validation of a dataset. For models including thin-plate regression splines (TPRS) or principal component analysis (PCA) scores, these functions will re-evaluate the TPRS basis or PCA decomposition on each training set.
 }
 \examples{
 n <- 200

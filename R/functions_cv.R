@@ -14,7 +14,7 @@
 ## 
 ##' @title Cross-validation of Predictive K-means Clustering
 ##
-##' @description Performs cross-validation of predictive-kmeans on a dataset.
+##' @description Performs cross-validation of predictive k-means clustering and cluster prediction.
 ##
 ## Inputs:
 ##' @param X Outcome data
@@ -34,17 +34,16 @@
 ##' @param TPRS Logical indicator for whether thin-plate regression
 ##'		splines should be created and added to covariates.
 ##'	@param TPRScontrol Arguments passed to \code{\link{createTPRSmodelmatrix}}. This includes \code{df}.
-##' @param sigma2 starting value of sigma2. Note: If sigma2=0 and 
-##'		sigma2fixed=TRUE, then regular k-means is done in place of  
-##'		predictive k-means.
+##' @param sigma2 starting value of sigma2. Setting \code{sigma2=0} and 
+##'		\code{sigma2fixed=TRUE} results in regular k-means clustering.
 ##' @param sigma2fixed Logical indicating whether sigma2
 ##'		should be held fixed.  If FALSE, then
 ##'		sigma2 is estimated using Maximum Likelihood.
 ##' @param returnAll A list containing all \code{nStarts} solutions is
 ##'		included in the output.
-##' @param ... Additional arguments passed to \code{\link{predkmeans}}
+##' @param ... Additional arguments passed to either \code{\link{predkmeans}} or the prediction method.
 ##
-##' @details To be added....
+##' @details These wrappers are designed to simplify cross-validation of a dataset. For models including thin-plate regression splines (TPRS) or principal component analysis (PCA) scores, these functions will re-evaluate the TPRS basis or PCA decomposition on each training set.
 ##
 ##' @family 'predkmeans methods'
 ##' @seealso \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
@@ -65,7 +64,7 @@
 ##' X <- cbind(x1, x2)
 ##' pkmcv <- predkmeansCVest(X=cbind(x1, x2), R=R, K=4, nStarts=4, cv.groups= 5, TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
 ##' pkmcv
-predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=NULL, PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=TRUE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
+predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=colnames(R), PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=FALSE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
 	
 	R <- as.data.frame(R)
 	fncall <- match.call()
@@ -156,20 +155,17 @@ return(out)
 
 ##
 ##' @name predkmeansCVpred
-## 
-##' @title Prediction from Cross-validation of Predictive K-means Clustering
+##' @rdname predkmeansCVest
+## @title Prediction from Cross-validation of Predictive K-means Clustering
 ##
-##' @description Performs cross-validation of predictive-kmeans on a dataset.
+## @description Performs cross-validation of predictive-kmeans on a dataset.
 ##
-##' @param object A \code{predkmeansCVest} object. See \code{\link{predkmeansCVest}}.
-##'	@param X Matrix of observations
-##' @param R matrix of covariates.
+##' @param object A \code{predkmeansCVest} object. 
+##	@param X Matrix of observations
+## @param R matrix of covariates.
 ##' @param method Character string indicating which prediciton method should be used. Optins are \code{ML}, \code{MixExp}, and \code{SVM}. See \code{\link{predictML}} for more information.
-##' @param ... Additional arguments passed to the prediction method.
-
-##' @seealso \code{\link{predkmeansCVest}}, \code{\link{predictML}}
+## @param ... Additional arguments passed to the prediction method.
 ##
-##' @author Joshua Keller
 ##' @export
 ##
 predkmeansCVpred <- function(object, X=object$X, R=object$R, method=c("ML", "MixExp", "SVM"),  ...) {

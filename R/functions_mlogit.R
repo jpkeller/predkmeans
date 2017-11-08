@@ -22,7 +22,6 @@
 ##'		Newton-Raphson method
 ##
 ##' @details The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.  The log-likehood function, along with its gradient and hessian, are implemented as C++ functions (via the \code{RcppArmadillo} package).
-
 ##  Input:
 ##' @param Y  A matrix of the outcomes, with K columns for 
 ##'		the K groups.  Row sums of the matrix should be equal
@@ -244,8 +243,8 @@ gradientMultinomial <- function(beta, Y, X){
 	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
 	# Compute probabilities
-#	eta <- exp(X %*% beta)
-#	prob <- eta/(1 + rowSums(eta))
+	#	eta <- exp(X %*% beta)
+	#	prob <- eta/(1 + rowSums(eta))
 	logeta <- X %*% beta
 	prob <- apply(logeta, 2, function(x) 1/(exp(-x) + rowSums(exp(logeta-x))))
 	g <- as.vector(crossprod(X, Y[,-1] - prob))
@@ -313,10 +312,8 @@ hessianMultinomial_Rcpp <- function(beta, Y, X, K=ncol(Y), p=ncol(X)){
 #	K <- ncol(Y)
 #	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
-
 	# H <- hessianMultinomialCpp(X=X, b=beta, y=Y[,-1, drop=FALSE], p=p,k=K)
 	H <- hessianMultinomialCpp(X=X, b=beta, y=Y, p=p,k=K)
-
 	-H
 }
 	

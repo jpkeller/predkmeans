@@ -33,8 +33,8 @@ assignCluster <- function(X, centers){
 
 
 ##' @name createPCAmodelmatrix
-##' @title Get PCA comps for regression
-##' @description Wrapper function for creating PCA components to be used
+##' @title Create Principal Component Analysis (PCA) scores matrix
+##' @description Wrapper function for creating PCA scores to be used
 ##'		in a regression analysis.
 ##
 ##' @param data Matrix or data frame of data
@@ -49,7 +49,7 @@ assignCluster <- function(X, centers){
 ##' @export
 ##' @importFrom stats prcomp
 ##' @author Joshua Keller
-##' @seealso \code{\link{createTPRSmodelmatrix}}
+##' @seealso \code{\link{createTPRSmodelmatrix}} \code{\link{predkmeansCVest}}
 createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
 	if (ncomps>ncol(data)) stop("ncomps too large for data provided.")
 	pca <- prcomp(data[,covarnames, drop=FALSE], center=center, scale=scale)
@@ -62,8 +62,8 @@ createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center
 }
 
 ##' @name createTPRSmodelmatrix
-##' @title Get matrix of TPRS for regression
-##' @description Wrapper function for creating thin-plate regression splines (TPRS)
+##' @title Create matrix of Thin-Plate Regression Splines (TPRS) 
+##' @description Wrapper function for creating a matrix of thin-plate regression splines (TPRS)
 ##'		to be used in a regression analysis.
 ##
 ##' @param data Matrix or data frame of data
@@ -79,7 +79,7 @@ createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center
 ##' @export
 ##' @importFrom stats formula
 ##' @author Joshua Keller
-##' @seealso \code{\link{createPCAmodelmatrix}}
+##' @seealso \code{\link{createPCAmodelmatrix}} \code{\link{predkmeansCVest}}
 createTPRSmodelmatrix <- function(data, df=5, covarnames=NULL, xname="x", yname="y", TPRSfx=TRUE, matrixonly=TRUE){
 if(!requireNamespace("mgcv", quietly=TRUE)){
 	stop("mgcv is required to create TPRS objects.  Please install it.", call.=FALSE)
