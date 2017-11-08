@@ -27,9 +27,8 @@ predkmeansCVpred(object, X = object$X, R = object$R, method = c("ML",
 which the data are randomly split. A value of '0' implies leave-one-out.
 Defaults to 10.}
 
-\item{sigma2}{starting value of sigma2. Note: If sigma2=0 and 
-sigma2fixed=TRUE, then regular k-means is done in place of  
-predictive k-means.}
+\item{sigma2}{starting value of sigma2. Setting \code{sigma2=0} and 
+\code{sigma2fixed=TRUE} results in regular k-means clustering.}
 
 \item{sigma2fixed}{Logical indicating whether sigma2
 should be held fixed.  If FALSE, then
@@ -55,7 +54,7 @@ included in the output.}
 
 \item{...}{Additional arguments passed to either \code{\link{predkmeans}} or the prediction method.}
 
-\item{object}{A \code{predkmeansCVest} object. See \code{\link{predkmeansCVest}}.}
+\item{object}{A \code{predkmeansCVest} object.}
 
 \item{method}{Character string indicating which prediciton method should be used. Optins are \code{ML}, \code{MixExp}, and \code{SVM}. See \code{\link{predictML}} for more information.}
 }

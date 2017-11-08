@@ -37,6 +37,8 @@ assignCluster <- function(X, centers){
 ##' @description Wrapper function for creating PCA scores to be used
 ##'		in a regression analysis.
 ##
+##' @details This is a wrapper around \code{\link{prcomp}}, which does 
+##'			the necessary computation.
 ##' @param data Matrix or data frame of data
 ##' @param ncomps Number of PCA components to return.
 ##' @param covarnames Names of variables or column numbers in \code{data}
@@ -46,10 +48,17 @@ assignCluster <- function(X, centers){
 ##' @param matrixonly Logical indicator of whether only the model matrix should
 ##'		be returned, or the full output from \code{\link{prcomp}}.
 ##
+##' @return If \code{matrixonly=TRUE}, a matrix of PCA scores. Otherwise a list containing two elements: \code{X},  a matrix of scores, and \code{pca}, the output from \code{prcomp}.
 ##' @export
 ##' @importFrom stats prcomp
 ##' @author Joshua Keller
-##' @seealso \code{\link{createTPRSmodelmatrix}} \code{\link{predkmeansCVest}}
+##' @seealso \code{\link{createTPRSmodelmatrix}}, \code{\link{predkmeansCVest}}
+##' @examples
+##' n <- 100
+##' d <- 15
+##' X <- matrix(rnorm(n*d), ncol=d, nrow=n)
+##' X <- as.data.frame(X)
+##' mx <- createPCAmodelmatrix(data=X, ncomps=2)
 createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center=TRUE, scale=TRUE, matrixonly=TRUE){
 	if (ncomps>ncol(data)) stop("ncomps too large for data provided.")
 	pca <- prcomp(data[,covarnames, drop=FALSE], center=center, scale=scale)
@@ -79,7 +88,7 @@ createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center
 ##' @export
 ##' @importFrom stats formula
 ##' @author Joshua Keller
-##' @seealso \code{\link{createPCAmodelmatrix}} \code{\link{predkmeansCVest}}
+##' @seealso \code{\link{createPCAmodelmatrix}}, \code{\link{predkmeansCVest}}
 ##' @examples
 ##' n <- 200
 ##' x <- runif(n=n, 0, 100)

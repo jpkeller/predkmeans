@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions_aux.R
 \name{createTPRSmodelmatrix}
 \alias{createTPRSmodelmatrix}
-\title{Get matrix of TPRS for regression}
+\title{Create matrix of Thin-Plate Regression Splines (TPRS)}
 \usage{
 createTPRSmodelmatrix(data, df = 5, covarnames = NULL, xname = "x",
   yname = "y", TPRSfx = TRUE, matrixonly = TRUE)
@@ -25,11 +25,18 @@ matrix.}
 be returned, or the full output from \code{\link{gam}}.}
 }
 \description{
-Wrapper function for creating thin-plate regression splines (TPRS)
+Wrapper function for creating a matrix of thin-plate regression splines (TPRS)
 	to be used in a regression analysis.
 }
+\examples{
+n <- 200
+x <- runif(n=n, 0, 100)
+y <- runif(n=n, 0, 100)
+d <- data.frame(x=x, y=y)
+mx <- createTPRSmodelmatrix(data=d, df=5)
+}
 \seealso{
-\code{\link{createPCAmodelmatrix}}
+\code{\link{createPCAmodelmatrix}}, \code{\link{predkmeansCVest}}
 }
 \author{
 Joshua Keller
