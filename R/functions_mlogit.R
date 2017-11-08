@@ -22,7 +22,6 @@
 ##'		Newton-Raphson method
 ##
 ##' @details The optimization is done using the \code{\link{maxNR}} function from the \code{maxLik} package.  The log-likehood function, along with its gradient and hessian, are implemented as C++ functions (via the \code{RcppArmadillo} package).
-
 ##  Input:
 ##' @param Y  A matrix of the outcomes, with K columns for 
 ##'		the K groups.  Row sums of the matrix should be equal
@@ -74,17 +73,21 @@
 ##'  \item{res.best}{ the best result from the maxNR fit}
 ##' 	\item{status}{ small data frame summarizing the status of the fits}
 ##'   \item{res. all}{ a list containing the results from all maxNR fits}
-#
-#		Author: J. Keller
-#		Original Date: February 2014
-#		Last modified: June 2015
-# 
-#	Internal Changelog:
-#		16 June 2015 -- Merged the Rccp version of this function
-#						into this file, to streamline code for making into
-#						a package.
-#		15 July 2015 -- Changin the beta to have a column of zeros
-#						and give class information. Added colnames to Y
+##'
+##' @examples
+##' n <- 2000
+##' X <- cbind(1,
+##' 		matrix(rnorm(2*n), nrow=n, ncol=2),
+##' 		rbinom(n, size=1, prob=0.3))
+##' beta <- cbind(rep(0, 4),
+##' 			  c(0.5, 1, 0, -1),
+##' 			  c(0, 2, 2, 0))
+##' probs <- exp(X %*% beta)
+##' probs <- probs/rowSums(probs)
+##' Y <- t(apply(probs, 1, function(p) rmultinom(1, 1, p)))
+##' mfit <- mlogit(Y=Y, X=X, betaOnly=TRUE)
+##' mfit
+##
 mlogit <- function(Y, X, beta=NULL, add.intercept=FALSE, betaOnly=FALSE, tol.zero=1e-8, verbose=T, suppressFittedWarning=FALSE, maxNR.print.level=0, iterlim=150, checkY=TRUE){
 	
 	X <- as.matrix(X)
@@ -240,8 +243,8 @@ gradientMultinomial <- function(beta, Y, X){
 	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
 	# Compute probabilities
-#	eta <- exp(X %*% beta)
-#	prob <- eta/(1 + rowSums(eta))
+	#	eta <- exp(X %*% beta)
+	#	prob <- eta/(1 + rowSums(eta))
 	logeta <- X %*% beta
 	prob <- apply(logeta, 2, function(x) 1/(exp(-x) + rowSums(exp(logeta-x))))
 	g <- as.vector(crossprod(X, Y[,-1] - prob))
@@ -309,10 +312,8 @@ hessianMultinomial_Rcpp <- function(beta, Y, X, K=ncol(Y), p=ncol(X)){
 #	K <- ncol(Y)
 #	p <- ncol(X)
 	beta <- matrix(beta, nrow=p, ncol=K-1)
-
 	# H <- hessianMultinomialCpp(X=X, b=beta, y=Y[,-1, drop=FALSE], p=p,k=K)
 	H <- hessianMultinomialCpp(X=X, b=beta, y=Y, p=p,k=K)
-
 	-H
 }
 	

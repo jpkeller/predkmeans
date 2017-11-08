@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions_aux.R
 \name{createPCAmodelmatrix}
 \alias{createPCAmodelmatrix}
-\title{Get PCA comps for regression}
+\title{Create Principal Component Analysis (PCA) scores matrix}
 \usage{
 createPCAmodelmatrix(data, ncomps, covarnames = colnames(data),
   center = TRUE, scale = TRUE, matrixonly = TRUE)
@@ -22,12 +22,26 @@ on which the PCA is to be run.}
 \item{matrixonly}{Logical indicator of whether only the model matrix should
 be returned, or the full output from \code{\link{prcomp}}.}
 }
+\value{
+If \code{matrixonly=TRUE}, a matrix of PCA scores. Otherwise a list containing two elements: \code{X},  a matrix of scores, and \code{pca}, the output from \code{prcomp}.
+}
 \description{
-Wrapper function for creating PCA components to be used
+Wrapper function for creating PCA scores to be used
 	in a regression analysis.
 }
+\details{
+This is a wrapper around \code{\link{prcomp}}, which does 
+		the necessary computation.
+}
+\examples{
+n <- 100
+d <- 15
+X <- matrix(rnorm(n*d), ncol=d, nrow=n)
+X <- as.data.frame(X)
+mx <- createPCAmodelmatrix(data=X, ncomps=2)
+}
 \seealso{
-\code{\link{createTPRSmodelmatrix}}
+\code{\link{createTPRSmodelmatrix}}, \code{\link{predkmeansCVest}}
 }
 \author{
 Joshua Keller

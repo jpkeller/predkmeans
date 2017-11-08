@@ -2,13 +2,17 @@
 % Please edit documentation in R/functions_cv.R
 \name{predkmeansCVest}
 \alias{predkmeansCVest}
+\alias{predkmeansCVpred}
 \title{Cross-validation of Predictive K-means Clustering}
 \usage{
 predkmeansCVest(X, R, K, cv.groups = 10, sigma2 = 0, sigma2fixed = FALSE,
-  scale = TRUE, covarnames = NULL, PCA = FALSE,
-  PCAcontrol = list(covarnames = colnames(R), ncomps = 5), TPRS = TRUE,
+  scale = TRUE, covarnames = colnames(R), PCA = FALSE,
+  PCAcontrol = list(covarnames = colnames(R), ncomps = 5), TPRS = FALSE,
   TPRScontrol = list(df = 5, xname = "x", yname = "y"), returnAll = FALSE,
   ...)
+
+predkmeansCVpred(object, X = object$X, R = object$R, method = c("ML",
+  "MixExp", "SVM"), ...)
 }
 \arguments{
 \item{X}{Outcome data}
@@ -23,9 +27,8 @@ predkmeansCVest(X, R, K, cv.groups = 10, sigma2 = 0, sigma2fixed = FALSE,
 which the data are randomly split. A value of '0' implies leave-one-out.
 Defaults to 10.}
 
-\item{sigma2}{starting value of sigma2. Note: If sigma2=0 and 
-sigma2fixed=TRUE, then regular k-means is done in place of  
-predictive k-means.}
+\item{sigma2}{starting value of sigma2. Setting \code{sigma2=0} and 
+\code{sigma2fixed=TRUE} results in regular k-means clustering.}
 
 \item{sigma2fixed}{Logical indicating whether sigma2
 should be held fixed.  If FALSE, then
@@ -49,13 +52,32 @@ splines should be created and added to covariates.}
 \item{returnAll}{A list containing all \code{nStarts} solutions is
 included in the output.}
 
-\item{...}{Additional arguments passed to \code{\link{predkmeans}}}
+\item{...}{Additional arguments passed to either \code{\link{predkmeans}} or the prediction method.}
+
+\item{object}{A \code{predkmeansCVest} object.}
+
+\item{method}{Character string indicating which prediciton method should be used. Optins are \code{ML}, \code{MixExp}, and \code{SVM}. See \code{\link{predictML}} for more information.}
 }
 \description{
-Performs cross-validation of predictive-kmeans on a dataset.
+Performs cross-validation of predictive k-means clustering and cluster prediction.
 }
 \details{
-To be added....
+These wrappers are designed to simplify cross-validation of a dataset. For models including thin-plate regression splines (TPRS) or principal component analysis (PCA) scores, these functions will re-evaluate the TPRS basis or PCA decomposition on each training set.
+}
+\examples{
+n <- 200
+r1 <- rnorm(n)
+r2 <- rnorm(n)
+u1 <- rbinom(n, size=1,prob=0)
+cluster <- ifelse(r1<0, ifelse(u1, "A", "B"), ifelse(r2<0, "C", "D"))
+mu1 <- c(A=2, B=2, C=-2, D=-2)
+mu2 <- c(A=1, B=-1, C=-1, D=-1)
+x1 <- rnorm(n, mu1[cluster], 4)
+x2 <- rnorm(n, mu2[cluster], 4)
+R <- model.matrix(~r1 + r2)
+X <- cbind(x1, x2)
+pkmcv <- predkmeansCVest(X=cbind(x1, x2), R=R, K=4, nStarts=4, cv.groups= 5, TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
+pkmcv
 }
 \seealso{
 \code{\link{predkmeans}}, \code{\link{predkmeansCVpred}}, \code{\link{createPCAmodelmatrix}}, \code{\link{createTPRSmodelmatrix}}
