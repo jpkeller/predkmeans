@@ -80,6 +80,13 @@ createPCAmodelmatrix <- function(data, ncomps, covarnames=colnames(data), center
 ##' @importFrom stats formula
 ##' @author Joshua Keller
 ##' @seealso \code{\link{createPCAmodelmatrix}} \code{\link{predkmeansCVest}}
+##' @examples
+##' n <- 200
+##' x <- runif(n=n, 0, 100)
+##' y <- runif(n=n, 0, 100)
+##' d <- data.frame(x=x, y=y)
+##' mx <- createTPRSmodelmatrix(data=d, df=5)
+##
 createTPRSmodelmatrix <- function(data, df=5, covarnames=NULL, xname="x", yname="y", TPRSfx=TRUE, matrixonly=TRUE){
 if(!requireNamespace("mgcv", quietly=TRUE)){
 	stop("mgcv is required to create TPRS objects.  Please install it.", call.=FALSE)
