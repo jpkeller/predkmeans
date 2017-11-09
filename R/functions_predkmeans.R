@@ -288,12 +288,8 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 ## S3Methods for predkmeans  ##
 ###############################
 
-##' @title Print details for class \code{predkmeans}
-##' @description \code{\link[base:print]{print}} method for class \code{predkmeans}.
-##' @param x object of class \code{predkmeans}
-##' @param ... Ignored additional arguments.
+
 ##' @export
-##' @family methods for predkmeans objects
 print.predkmeans <- function(x, ...){
 	if(class(x)!="predkmeans"){
 		stop("x must be of class predkmeans.")
@@ -306,12 +302,8 @@ print.predkmeans <- function(x, ...){
 }##print.predkmeans()
 
 
-##' @title Compute summary details for class \code{predkmeans}
-##' @description \code{\link[base:print]{summary}} method for class \code{predkmeans}.
-##' @param object object of class \code{predkmeans}
-##' @param ... Ignored additional arguments.
+
 ##' @export
-##' @family methods for predkmeans objects
 summary.predkmeans <- function(object, ...){
 	class(object) <- "summary.predkmeans"
 	object
@@ -343,7 +335,7 @@ print.summary.predkmeans <- function(x, ...){
 ##
 ##' @details The elements of the \code{order} argument should refer
 ##'		to the current position of clusters, with the position
-##'		giving the new order. So 'c(3, 1, 2)' moves 1 to 2, 2 to 3, and 3 to 1.
+##'		giving the new order. So \code{c(3, 1, 2)} moves 1 to 2, 2 to 3, and 3 to 1.
 ##
 ##' @author Joshua Keller
 ##' @export

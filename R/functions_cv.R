@@ -63,7 +63,9 @@
 ##' x2 <- rnorm(n, mu2[cluster], 4)
 ##' R <- model.matrix(~r1 + r2)
 ##' X <- cbind(x1, x2)
-##' pkmcv <- predkmeansCVest(X=cbind(x1, x2), R=R, K=4, nStarts=4, cv.groups= 5, TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
+##' pkmcv <- predkmeansCVest(X=cbind(x1, x2),
+##'                          R=R, K=4, nStarts=4, cv.groups= 5,
+##'                          TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
 ##' pkmcv
 predkmeansCVest <- function(X, R, K, cv.groups=10, sigma2=0,  sigma2fixed=FALSE, scale=TRUE, covarnames=colnames(R), PCA=FALSE, PCAcontrol=list(covarnames=colnames(R), ncomps=5), TPRS=FALSE,TPRScontrol=list(df=5, xname="x", yname="y"), returnAll=FALSE, ...){ 
 	
@@ -226,12 +228,7 @@ return(out)
 }	
 
 
-##' @title Print details for class \code{predkmeansCVest}
-##' @description \code{\link[base:print]{print}} method for class \code{predkmeansCVest}.
-##' @param x object of class \code{predkmeansCVest}
-##' @param ... Ignored additional arguments.
 ##' @export
-##' @family 'predkmeansCVest methods'
 print.predkmeansCVest <- function(x, ...){
 	if(class(x)!="predkmeansCVest"){
 		stop("x must be of class predkmeansCVest.")
@@ -248,12 +245,7 @@ print.predkmeansCVest <- function(x, ...){
 }##print.predkmeansCVest()
 
 
-##' @title Print details for class \code{predkmeansCVpred}
-##' @description \code{\link[base:print]{print}} method for class \code{predkmeansCVpred}.
-##' @param x object of class \code{predkmeansCVpred}
-##' @param ... Ignored additional arguments.
 ##' @export
-##' @family 'predkmeansCVpred methods'
 print.predkmeansCVpred <- function(x, ...){
 	if(class(x)!="predkmeansCVpred"){
 		stop("x must be of class predkmeansCVpred.")
@@ -265,12 +257,8 @@ print.predkmeansCVpred <- function(x, ...){
 }##print.predkmeansCVpred()
 
 
-##' @title Compute summary details for class \code{predkmeansCVpred}
-##' @description \code{\link[base:print]{summary}} method for class \code{predkmeansCVpred}.
-##' @param object object of class \code{predkmeansCVpred}
-##' @param ... Ignored additional arguments.
+
 ##' @export
-##' @family predkmeans methods
 summary.predkmeansCVpred <- function(object, ...){
 	class(object) <- "summary.predkmeansCVpred"
 	object
@@ -320,7 +308,7 @@ createCVgroups <- function(x=NULL, n=length(x), k=10, useNames=TRUE){
 	if (!is.numeric(k) || k<0 || k>n){
 		stop("Invalid values of 'k'. Must be between 0 (for leave-one-out CV) and 'n'.")
 	}
-	if (useNames && is.null(names(x))) {
+	if (useNames && !is.null(names(x))) {
 		names(cv.groups) <- names(x)
 	}
 	dummyorder <- sample(1:n, size=n)

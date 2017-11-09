@@ -77,11 +77,11 @@
 ##' @examples
 ##' n <- 2000
 ##' X <- cbind(1,
-##' 		matrix(rnorm(2*n), nrow=n, ncol=2),
-##' 		rbinom(n, size=1, prob=0.3))
+##'            matrix(rnorm(2*n), nrow=n, ncol=2),
+##'            rbinom(n, size=1, prob=0.3))
 ##' beta <- cbind(rep(0, 4),
-##' 			  c(0.5, 1, 0, -1),
-##' 			  c(0, 2, 2, 0))
+##'               c(0.5, 1, 0, -1),
+##'               c(0, 2, 2, 0))
 ##' probs <- exp(X %*% beta)
 ##' probs <- probs/rowSums(probs)
 ##' Y <- t(apply(probs, 1, function(p) rmultinom(1, 1, p)))
@@ -175,12 +175,7 @@ mlogit <- function(Y, X, beta=NULL, add.intercept=FALSE, betaOnly=FALSE, tol.zer
 }	
 	
 
-##' @title Print details for class \code{mlogit}
-##' @description \code{\link[base:print]{print}} method for class \code{mlogit}.
-##' @param x object of class \code{mlogit}
-##' @param ... Ignored additional arguments.
 ##' @export
-##' @family mlogit methods
 print.mlogit <- function(x, ...){
 	K <- ncol(x$beta)
 	p <- nrow(x$beta)
@@ -192,12 +187,8 @@ print.mlogit <- function(x, ...){
 }##print.mlogit()
 
 
-##' @title Compute summary details for class \code{mlogit}
-##' @description \code{\link[base:print]{summary}} method for class \code{mlogit}.
-##' @param object object of class \code{mlogit}
-##' @param ... Ignored additional arguments.
+
 ##' @export
-##' @family mlogit methods
 summary.mlogit <- function(object, ...){
 	class(object) <- "summary.mlogit"
 	object

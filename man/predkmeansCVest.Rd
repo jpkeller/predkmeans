@@ -76,7 +76,9 @@ x1 <- rnorm(n, mu1[cluster], 4)
 x2 <- rnorm(n, mu2[cluster], 4)
 R <- model.matrix(~r1 + r2)
 X <- cbind(x1, x2)
-pkmcv <- predkmeansCVest(X=cbind(x1, x2), R=R, K=4, nStarts=4, cv.groups= 5, TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
+pkmcv <- predkmeansCVest(X=cbind(x1, x2),
+                         R=R, K=4, nStarts=4, cv.groups= 5,
+                         TPRS=FALSE, PCA=FALSE, covarnames=colnames(R))
 pkmcv
 }
 \seealso{

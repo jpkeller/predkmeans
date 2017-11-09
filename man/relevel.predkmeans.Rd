@@ -21,12 +21,10 @@ Function for re-ordering the order of clusters in a predkmeans object.
 \details{
 The elements of the \code{order} argument should refer
 	to the current position of clusters, with the position
-	giving the new order. So 'c(3, 1, 2)' moves 1 to 2, 2 to 3, and 3 to 1.
+	giving the new order. So \code{c(3, 1, 2)} moves 1 to 2, 2 to 3, and 3 to 1.
 }
 \seealso{
-Other methods for predkmeans objects: \code{\link{predictML.predkmeans}},
-  \code{\link{print.predkmeans}},
-  \code{\link{summary.predkmeans}}
+Other methods for predkmeans objects: \code{\link{predictML.predkmeans}}
 }
 \author{
 Joshua Keller
