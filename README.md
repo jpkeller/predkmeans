@@ -1,5 +1,7 @@
 # predkmeans
-R Package for implementing the predictive k-means method
+[![CRAN Status](http://www.r-pkg.org/badges/version/predkmeans)](https://cran.r-project.org/package=predkmeans)
+
+R Package for implementing the predictive k-means method.
 
 Clusters multivariate exposures, using a mixture of experts model to allow covariates to influence cluster centers. 
 Motivated by air pollution epidemiology settings, where cluster membership needs to be predicted across space. 
