@@ -16,6 +16,12 @@ get.cluster.pred <- function(R, beta){
 ##' @return A vector of cluster labels
 ##' @author Joshua Keller
 ##' @export
+##' @examples
+##' X <- matrix(rnorm(100*5), nrow=100, ncol=5)
+##' centers <- matrix(runif(3*5), nrow=3, ncol=5)
+##' 
+##' cl <- assignCluster(X, centers)
+##' table(cl)
 assignCluster <- function(X, centers){
 	k <- nrow(centers)
     cl_dist <- matrix(NA, nrow=dim(X)[1], ncol=k)

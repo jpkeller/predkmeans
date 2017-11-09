@@ -17,6 +17,13 @@ A vector of cluster labels
 \description{
 Assigns observation to the nearest cluster center, using squared Euclidean distance.
 }
+\examples{
+X <- matrix(rnorm(100*5), nrow=100, ncol=5)
+centers <- matrix(runif(3*5), nrow=3, ncol=5)
+
+cl <- assignCluster(X, centers)
+table(cl)
+}
 \author{
 Joshua Keller
 }
