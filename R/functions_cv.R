@@ -308,10 +308,10 @@ createCVgroups <- function(x=NULL, n=length(x), k=10, useNames=TRUE){
 	if (!is.numeric(k) || k<0 || k>n){
 		stop("Invalid values of 'k'. Must be between 0 (for leave-one-out CV) and 'n'.")
 	}
-	if (useNames && !is.null(names(x))) {
-		names(cv.groups) <- names(x)
-	}
 	dummyorder <- sample(1:n, size=n)
+	if (useNames && !is.null(names(x))) {
+	    names(dummyorder) <- names(x)[dummyorder]
+	}
 	cv.groups <- split(dummyorder, f=ceiling(seq_along(dummyorder)/(n/k)))
 	cv.groups
 }
