@@ -4,9 +4,19 @@
 \alias{mlogit}
 \title{Multinomial Logistic Regression}
 \usage{
-mlogit(Y, X, beta = NULL, add.intercept = FALSE, betaOnly = FALSE,
-  tol.zero = 1e-08, verbose = T, suppressFittedWarning = FALSE,
-  maxNR.print.level = 0, iterlim = 150, checkY = TRUE)
+mlogit(
+  Y,
+  X,
+  beta = NULL,
+  add.intercept = FALSE,
+  betaOnly = FALSE,
+  tol.zero = 1e-08,
+  verbose = T,
+  suppressFittedWarning = FALSE,
+  maxNR.print.level = 0,
+  iterlim = 150,
+  checkY = TRUE
+)
 }
 \arguments{
 \item{Y}{A matrix of the outcomes, with K columns for 
@@ -89,3 +99,4 @@ mfit
 \author{
 Joshua Keller
 }
+\concept{mlogit methods}

@@ -256,8 +256,8 @@ return(list(test.pred=test.pred))
 ##' metrics <- predictionMetrics(centers, cluster.pred=cluster_pred, X=X)
 ##' metrics[c("MSPE", "wSS", "MSME", "pred.acc")]
 predictionMetrics <- function(centers, cluster.pred, X, labels=TRUE){		
-	if (class(X)!="matrix") X <- as.matrix(X)
-	if (class(centers)!="matrix") centers <- as.matrix(centers)
+	if (!inherits(X,"matrix")) X <- as.matrix(X)
+	if (!inherits(centers,"matrix")) centers <- as.matrix(centers)
 	if(ncol(centers)!=ncol(X)) stop("Number of columns in 'centers' and 'X' should be the same.")
 	if(length(cluster.pred)!=nrow(X)) stop("Length of cluster.pred should equal number of rows in X.")
 	K <- nrow(centers)

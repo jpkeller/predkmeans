@@ -46,8 +46,10 @@ pkm3 <- relevel(pkm, order=order(table(pkm$cluster), decreasing=TRUE))
 table(pkm3$cluster)
 }
 \seealso{
-Other methods for predkmeans objects: \code{\link{predictML.predkmeans}}
+Other methods for predkmeans objects: 
+\code{\link{predictML.predkmeans}()}
 }
 \author{
 Joshua Keller
 }
+\concept{methods for predkmeans objects}

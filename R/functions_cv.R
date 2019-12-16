@@ -230,7 +230,7 @@ return(out)
 
 ##' @export
 print.predkmeansCVest <- function(x, ...){
-	if(class(x)!="predkmeansCVest"){
+	if(!inherits(x,"predkmeansCVest")){
 		stop("x must be of class predkmeansCVest.")
 	}
 	cat("Cross-validation fit for predictive k-means object with\n" )
@@ -247,7 +247,7 @@ print.predkmeansCVest <- function(x, ...){
 
 ##' @export
 print.predkmeansCVpred <- function(x, ...){
-	if(class(x)!="predkmeansCVpred"){
+	if(!inherits(x,"predkmeansCVpred")){
 		stop("x must be of class predkmeansCVpred.")
 	}
 	cat("Cross-validation predictions for predictive k-means object.\n" )

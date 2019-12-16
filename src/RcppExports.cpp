@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // loglikeCpp
 double loglikeCpp(arma::mat X, arma::mat b, arma::mat y, int n);
-RcppExport SEXP predkmeans_loglikeCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP nSEXP) {
+RcppExport SEXP _predkmeans_loglikeCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,7 @@ END_RCPP
 }
 // gradientMultinomialCpp
 arma::mat gradientMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int k);
-RcppExport SEXP predkmeans_gradientMultinomialCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP kSEXP) {
+RcppExport SEXP _predkmeans_gradientMultinomialCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -36,7 +36,7 @@ END_RCPP
 }
 // hessianMultinomialCpp
 arma::mat hessianMultinomialCpp(arma::mat X, arma::mat b, arma::mat y, int p, int k);
-RcppExport SEXP predkmeans_hessianMultinomialCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP pSEXP, SEXP kSEXP) {
+RcppExport SEXP _predkmeans_hessianMultinomialCpp(SEXP XSEXP, SEXP bSEXP, SEXP ySEXP, SEXP pSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -51,9 +51,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"predkmeans_loglikeCpp", (DL_FUNC) &predkmeans_loglikeCpp, 4},
-    {"predkmeans_gradientMultinomialCpp", (DL_FUNC) &predkmeans_gradientMultinomialCpp, 4},
-    {"predkmeans_hessianMultinomialCpp", (DL_FUNC) &predkmeans_hessianMultinomialCpp, 5},
+    {"_predkmeans_loglikeCpp", (DL_FUNC) &_predkmeans_loglikeCpp, 4},
+    {"_predkmeans_gradientMultinomialCpp", (DL_FUNC) &_predkmeans_gradientMultinomialCpp, 4},
+    {"_predkmeans_hessianMultinomialCpp", (DL_FUNC) &_predkmeans_hessianMultinomialCpp, 5},
     {NULL, NULL, 0}
 };
 

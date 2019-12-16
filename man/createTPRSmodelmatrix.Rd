@@ -4,8 +4,15 @@
 \alias{createTPRSmodelmatrix}
 \title{Create matrix of Thin-Plate Regression Splines (TPRS)}
 \usage{
-createTPRSmodelmatrix(data, df = 5, covarnames = NULL, xname = "x",
-  yname = "y", TPRSfx = TRUE, matrixonly = TRUE)
+createTPRSmodelmatrix(
+  data,
+  df = 5,
+  covarnames = NULL,
+  xname = "x",
+  yname = "y",
+  TPRSfx = TRUE,
+  matrixonly = TRUE
+)
 }
 \arguments{
 \item{data}{Matrix or data frame of data}

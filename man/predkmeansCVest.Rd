@@ -5,14 +5,30 @@
 \alias{predkmeansCVpred}
 \title{Cross-validation of Predictive K-means Clustering}
 \usage{
-predkmeansCVest(X, R, K, cv.groups = 10, sigma2 = 0, sigma2fixed = FALSE,
-  scale = TRUE, covarnames = colnames(R), PCA = FALSE,
-  PCAcontrol = list(covarnames = colnames(R), ncomps = 5), TPRS = FALSE,
-  TPRScontrol = list(df = 5, xname = "x", yname = "y"), returnAll = FALSE,
-  ...)
+predkmeansCVest(
+  X,
+  R,
+  K,
+  cv.groups = 10,
+  sigma2 = 0,
+  sigma2fixed = FALSE,
+  scale = TRUE,
+  covarnames = colnames(R),
+  PCA = FALSE,
+  PCAcontrol = list(covarnames = colnames(R), ncomps = 5),
+  TPRS = FALSE,
+  TPRScontrol = list(df = 5, xname = "x", yname = "y"),
+  returnAll = FALSE,
+  ...
+)
 
-predkmeansCVpred(object, X = object$X, R = object$R, method = c("ML",
-  "MixExp", "SVM"), ...)
+predkmeansCVpred(
+  object,
+  X = object$X,
+  R = object$R,
+  method = c("ML", "MixExp", "SVM"),
+  ...
+)
 }
 \arguments{
 \item{X}{Outcome data}
@@ -87,3 +103,4 @@ pkmcv
 \author{
 Joshua Keller
 }
+\concept{'predkmeans methods'}

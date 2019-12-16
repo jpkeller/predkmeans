@@ -291,8 +291,8 @@ predkmeans <- function(X, R, K, mu=NULL, muStart=c("kmeans","random"), sigma2=0,
 
 ##' @export
 print.predkmeans <- function(x, ...){
-	if(class(x)!="predkmeans"){
-		stop("x must be of class predkmeans.")
+	if(!inherits(x,"predkmeans")){
+		stop("x must be of (or inherit) class 'predkmeans'.")
 	}
 	cat("Predictive k-means object with\n" )
 	cat("    ", x$K, "Clusters\n")
@@ -314,7 +314,7 @@ print.summary.predkmeans <- function(x, ...){
 	cat("Predictive k-means object with\n" )
 	cat("    ", x$K, "Clusters\n")
 	cat("    ", ncol(x$centers), "Variables\n")
-	cat("Convergence status: ", ifelse(class(x$res.best)=="kmeans", 1, x$res.best$conv), "\n")
+	cat("Convergence status: ", ifelse(inherits(x$res.best, "kmeans"), 1, x$res.best$conv), "\n")
 	cat("Sigma^2 = ", round(x$sigma2, 2), " (Fixed = ", x$sigma2fixed, ")\n", sep="")
 	cat("Within-cluster Sum-of-Squares (wSS) = ", round(x$wSS, 2), "\n")
 	cat("Cluster centers are:\n")
@@ -363,7 +363,7 @@ print.summary.predkmeans <- function(x, ...){
 ##' pkm3 <- relevel(pkm, order=order(table(pkm$cluster), decreasing=TRUE))
 ##' table(pkm3$cluster)
 relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
-	if(class(x)!="predkmeans"){
+	if(!inherits(x, "predkmeans")){
 		stop("x must be of class predkmeans.")
 	}
 	
@@ -389,7 +389,7 @@ relevel.predkmeans <- function(x, ref=NULL, order=NULL, ...) {
 	}
 	x$centers <- x$centers[order, ]
 	rownames(x$centers) <- 1:x$K
-	if (class(x$res.best)=="kmeans"){
+	if (inherits(x$res.best,"kmeans")){
 		x$res.best$cluster <- x$cluster
 		x$res.best$centers <- x$centers
 		x$res.best$withinss <- x$res.best$withinss[order]

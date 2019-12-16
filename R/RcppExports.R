@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 loglikeCpp <- function(X, b, y, n) {
-    .Call('predkmeans_loglikeCpp', PACKAGE = 'predkmeans', X, b, y, n)
+    .Call('_predkmeans_loglikeCpp', PACKAGE = 'predkmeans', X, b, y, n)
 }
 
 gradientMultinomialCpp <- function(X, b, y, k) {
-    .Call('predkmeans_gradientMultinomialCpp', PACKAGE = 'predkmeans', X, b, y, k)
+    .Call('_predkmeans_gradientMultinomialCpp', PACKAGE = 'predkmeans', X, b, y, k)
 }
 
 hessianMultinomialCpp <- function(X, b, y, p, k) {
-    .Call('predkmeans_hessianMultinomialCpp', PACKAGE = 'predkmeans', X, b, y, p, k)
+    .Call('_predkmeans_hessianMultinomialCpp', PACKAGE = 'predkmeans', X, b, y, p, k)
 }
 

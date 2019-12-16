@@ -9,15 +9,33 @@
 \alias{predictMixExp}
 \title{Prediction of Cluster Membership}
 \usage{
-\method{predictML}{predkmeans}(object = NULL, centers = object$centers,
-  K = nrow(centers), R, Rstar, Xstar = NULL, tr.assign = object$cluster,
-  muStart = "random", maxitMlogit = 500, verbose = 1, nMlogitStarts = 1,
-  mlogit.control = list(suppressFittedWarning = TRUE), ...)
+\method{predictML}{predkmeans}(
+  object = NULL,
+  centers = object$centers,
+  K = nrow(centers),
+  R,
+  Rstar,
+  Xstar = NULL,
+  tr.assign = object$cluster,
+  muStart = "random",
+  maxitMlogit = 500,
+  verbose = 1,
+  nMlogitStarts = 1,
+  mlogit.control = list(suppressFittedWarning = TRUE),
+  ...
+)
 
-\method{predictSVM}{predkmeans}(object = NULL, centers = object$centers, R,
-  Rstar, K = nrow(centers), Xstar = NULL, tr.assign = object$cluster,
+\method{predictSVM}{predkmeans}(
+  object = NULL,
+  centers = object$centers,
+  R,
+  Rstar,
+  K = nrow(centers),
+  Xstar = NULL,
+  tr.assign = object$cluster,
   svm.control = list(gamma = c(1/(2:1), 2), cost = seq(20, 100, by = 20)),
-  ...)
+  ...
+)
 
 \method{predictMixExp}{predkmeans}(object, R, Rstar = NULL, ...)
 }
@@ -93,8 +111,10 @@ pkmPred$test.pred
 \seealso{
 \code{\link{mlogit}}, \code{\link{predkmeans}}, \code{\link{predictionMetrics}}
 
-Other methods for predkmeans objects: \code{\link{relevel.predkmeans}}
+Other methods for predkmeans objects: 
+\code{\link{relevel.predkmeans}()}
 }
 \author{
 Joshua Keller
 }
+\concept{methods for predkmeans objects}

@@ -4,8 +4,14 @@
 \alias{createPCAmodelmatrix}
 \title{Create Principal Component Analysis (PCA) scores matrix}
 \usage{
-createPCAmodelmatrix(data, ncomps, covarnames = colnames(data),
-  center = TRUE, scale = TRUE, matrixonly = TRUE)
+createPCAmodelmatrix(
+  data,
+  ncomps,
+  covarnames = colnames(data),
+  center = TRUE,
+  scale = TRUE,
+  matrixonly = TRUE
+)
 }
 \arguments{
 \item{data}{Matrix or data frame of data}

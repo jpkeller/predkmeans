@@ -4,10 +4,24 @@
 \alias{predkmeans}
 \title{Predictive K-means Clustering}
 \usage{
-predkmeans(X, R, K, mu = NULL, muStart = c("kmeans", "random"),
-  sigma2 = 0, sigma2fixed = FALSE, maxitEM = 100, tol = 1e-05,
-  convEM = c("both", "mu", "gamma"), nStarts = 1, maxitMlogit = 500,
-  verbose = 0, muRestart = 1000, returnAll = FALSE, ...)
+predkmeans(
+  X,
+  R,
+  K,
+  mu = NULL,
+  muStart = c("kmeans", "random"),
+  sigma2 = 0,
+  sigma2fixed = FALSE,
+  maxitEM = 100,
+  tol = 1e-05,
+  convEM = c("both", "mu", "gamma"),
+  nStarts = 1,
+  maxitMlogit = 500,
+  verbose = 0,
+  muRestart = 1000,
+  returnAll = FALSE,
+  ...
+)
 }
 \arguments{
 \item{X}{An \code{n} by \code{p} matrix or data frame of data to be clustered.}
